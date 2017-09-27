@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration SYSTEM "mybatis-generator-config.dtd">
+
+<generatorConfiguration>
+    <properties></properties>
+    <classPathEntry location="cvxv"/>
+    <context id="mybatis">
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <!-- 数据库链接信息 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.3.230:3309/yuhuan_health?characterEncoding=utf8"
+                        userId="yuhuan_health" password="VDNLS2WuLmjX8uwP">
+        </jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+        <!-- model 数据模型 -->
+        <javaModelGenerator targetPackage="dataobject" targetProject="D:\generator\yuhuan-health\src\">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        <!-- sqlMapper -->
+        <sqlMapGenerator targetPackage="sqlMapper" targetProject="D:\generator\yuhuan-health\src">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+        <!-- javaMapper-->
+        <javaMapperGenerator type="XMLMAPPER" targetPackage="mapper" targetProject="D:\generator\yuhuan-health\src">
+            <property name="enableSubPackages" value="true" />
+        </javaMapperGenerator>
+        <table tableName="t_">
+
+        </table>
+    </context>
+</generatorConfiguration>
+
