@@ -12,18 +12,18 @@
 
 //gradle 工程mybaits生成<br> 
 ```java
-task mybatisGenerator(){<br> 
-    //jar 路径<br> 
-    def jarFile = "D:\\data\\mybatis-generator-1.0.0.jar"<br> 
-    //配置文件路径<br> 
-    def configFile = "D:\\data\\config.xml"<br> 
-    //工程路径<br> 
-    def projectPath = rootDir.getAbsolutePath()<br> 
-    def cmd = "java -jar " + jarFile + " -configfile " + configFile + " -project " + projectPath<br> 
-    println cmd<br> 
-    Process p = cmd.execute()<br> 
-    println "${p.text}"<br> 
-}<br> 
+task mybatisGenerator(){
+    //jar 路径 
+    def jarFile = "D:\\data\\mybatis-generator-1.0.0.jar"
+    //配置文件路径
+    def configFile = "D:\\data\\config.xml" 
+    //工程路径 
+    def projectPath = rootDir.getAbsolutePath()
+    def cmd = "java -jar " + jarFile + " -configfile " + configFile + " -project " + projectPath 
+    println cmd
+    Process p = cmd.execute()
+    println "${p.text}"
+} 
 ```
 
 执行mybatisGenerator<br> 
