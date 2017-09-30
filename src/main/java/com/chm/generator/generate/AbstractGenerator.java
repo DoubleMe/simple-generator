@@ -10,6 +10,7 @@ import com.chm.generator.generate.enums.FileType;
 import com.chm.generator.generate.javafile.JavaClientGenerator;
 import com.chm.generator.generate.javafile.JavaModelGenerator;
 import com.chm.generator.message.MessageSource;
+import com.chm.generator.types.JavaKeyHolder;
 import com.chm.generator.utils.JavaBeansUtil;
 
 import java.io.BufferedWriter;
@@ -33,6 +34,7 @@ public abstract class AbstractGenerator {
     public static final String PACKAGE = "package ";
 
     public static final String IMPORT = "import ";
+
     //class
     public static final String CLASS = "class";
 
@@ -56,6 +58,7 @@ public abstract class AbstractGenerator {
      * 表配置信息
      */
     protected List<IntrospectedTable> introspectedTable;
+
     /**
      * sqlMap 配置信息
      */
@@ -71,7 +74,7 @@ public abstract class AbstractGenerator {
      */
     protected JavaClientGeneratorConfiguration javaClientGeneratorConfiguration;
 
-    public  AbstractGenerator(GeneratorConfigHolder configHolder){
+    public AbstractGenerator(GeneratorConfigHolder configHolder) {
 
         this.introspectedTable = configHolder.getIntrospectedTable();
         this.sqlMapGeneratorConfiguration = configHolder.getSqlMapGeneratorConfiguration();
@@ -206,7 +209,6 @@ public abstract class AbstractGenerator {
         String file = fileName + "." + fileType.getValue();
         try {
             File directory = new File(targetFile, file);
-            System.out.println("file:" + file + "创建成功");
             fos = new FileOutputStream(directory, false);
             osw = new OutputStreamWriter(fos, fileEncoding);
             bw = new BufferedWriter(osw);
@@ -268,7 +270,7 @@ public abstract class AbstractGenerator {
         if (domainObjectName == null || "".equals(domainObjectName)) {
             String tableName = table.getTable().getTableName();
             RenamingRule domainObjectRenamingRule = table.getConfiguration().getDomainObjectRenamingRule();
-            if (domainObjectRenamingRule != null){
+            if (domainObjectRenamingRule != null) {
                 tableName = domainObjectRenamingRule.rename(tableName);
             }
             domainObjectName = JavaBeansUtil.getCamelCaseString(tableName, true);
@@ -303,10 +305,13 @@ public abstract class AbstractGenerator {
     protected String getColumnName(String columnName) {
 
 
-//        RenamingRule domainObjectRenamingRule = table.getConfiguration().getColumnRenamingRule();
-//        if (domainObjectRenamingRule != null){
-//            columnName = domainObjectRenamingRule.rename(columnName);
-//        }
+        //        RenamingRule domainObjectRenamingRule = table.getConfiguration().getColumnRenamingRule();
+        //        if (domainObjectRenamingRule != null){
+        //            columnName = domainObjectRenamingRule.rename(columnName);
+        //        }
+        if (JavaKeyHolder.containKey(columnName)) {
+            System.out.println("warning : the column name " + columnName + " is a java reserved word");
+        }
 
         return JavaBeansUtil.getCamelCaseString(columnName, false);
     }
