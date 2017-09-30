@@ -1,6 +1,6 @@
 # mybatis-generator
 #### 改造自 mybatis-generator(https://github.com/mybatis/generator) 
-改动如下：<br> 
+#### 改动如下：<br> 
 * 修改了生成的字段和表名没有注释问题<br> 
 * 修改了mapper 的方法。目前保留方法 insert、getById、update、list、delById<br> 
 * 修改DTD 简化了配置<br> 
