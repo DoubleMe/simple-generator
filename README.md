@@ -1,12 +1,12 @@
 # mybatis-generator
-## 改造自 mybatis-generator 
+### 改造自 mybatis-generator 
 改动如下：<br> 
-1、修改了生成的字段和表名没有注释问题<br> 
-2、修改了mapper 的方法。目前保留方法 insert、getById、update、list、delById<br> 
-3、修改DTD 简化了配置<br> 
-4、修改了java -jar启动参数 目前支持-configfile(配置文件路径) -project（工程路径）<br> 
+* 修改了生成的字段和表名没有注释问题<br> 
+* 修改了mapper 的方法。目前保留方法 insert、getById、update、list、delById<br> 
+* 修改DTD 简化了配置<br> 
+* 修改了java -jar启动参数 目前支持-configfile(配置文件路径) -project（工程路径）<br> 
 
-##使用方法：
+####使用方法：
 下载jar 或者下载工程代码打包<br> 
 将jar,DTD文件，配置文件信息放到d盘 data目录下<br> 
 
