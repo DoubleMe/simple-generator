@@ -27,11 +27,11 @@
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
         <!-- javaMapper-->
-        <javaMapperGenerator type="XMLMAPPER" targetPackage="mapper" targetProject="D:\generator\yuhuan-health\src">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="dataobject" targetProject="D:\generator\yuhuan-health\src">
             <property name="enableSubPackages" value="true" />
-        </javaMapperGenerator>
-        <table tableName="t_">
-
+        </javaClientGenerator>
+        <table tableName="t_org_info" alias="">
+            <domainObjectRenamingRule searchString="t_" replaceString=""/>
         </table>
     </context>
 </generatorConfiguration>

@@ -93,6 +93,10 @@ public class StringUtility {
         return "true".equalsIgnoreCase(s); //$NON-NLS-1$
     }
 
+    public static boolean isFalse(String s) {
+        return "false".equalsIgnoreCase(s); //$NON-NLS-1$
+    }
+
     public static boolean stringContainsSQLWildcard(String s) {
         if (s == null) {
             return false;

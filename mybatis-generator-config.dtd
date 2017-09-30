@@ -50,21 +50,13 @@
   The context element is used to describe a context for generating files, and the source
   tables.
 -->
-<!ELEMENT context (property*, plugin*, commentGenerator?, (connectionFactory | jdbcConnection), javaTypeResolver?,
-                         javaModelGenerator, sqlMapGenerator?, javaMapperGenerator?, table+)>
+<!ELEMENT context (property*, plugin*, jdbcConnection?, javaTypeResolver?,
+                         javaModelGenerator, sqlMapGenerator?, javaClientGenerator?, table+)>
 <!ATTLIST context id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
   targetRuntime CDATA #IMPLIED
   introspectedColumnImpl CDATA #IMPLIED>
 
-<!--
-  The connectionFactory element is used to describe the connection factory used
-  for connecting to the database for introspection.  Either connectionFacoty
-  or jdbcConnection must be specified, but not both.
--->
-<!ELEMENT connectionFactory (property*)>
-<!ATTLIST connectionFactory
-  type CDATA #IMPLIED>
 
 <!--
   The jdbcConnection element is used to describe the JDBC connection that the generator
@@ -139,8 +131,8 @@
   (as required) for each table.
   If this element is missing, then the generator will not build Java Client classes.
 -->
-<!ELEMENT javaMapperGenerator (property*)>
-<!ATTLIST javaMapperGenerator
+<!ELEMENT javaClientGenerator (property*)>
+<!ATTLIST javaClientGenerator
   type CDATA #REQUIRED
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED
@@ -150,7 +142,7 @@
   The table element is used to specify a database table that will be the source information
   for a set of generated objects.
 -->
-<!ELEMENT table (property*, generatedKey?, domainObjectRenamingRule?, columnRenamingRule?, (columnOverride | ignoreColumn | ignoreColumnsByRegex)*) >
+<!ELEMENT table (property*, domainObjectRenamingRule?, columnRenamingRule?) >
 <!ATTLIST table
   catalog CDATA #IMPLIED
   schema CDATA #IMPLIED
@@ -158,75 +150,16 @@
   alias CDATA #IMPLIED
   domainObjectName CDATA #IMPLIED
   mapperName CDATA #IMPLIED
-  sqlProviderName CDATA #IMPLIED
-  enableInsert CDATA #IMPLIED
-  enableSelectByPrimaryKey CDATA #IMPLIED
-  enableSelectByExample CDATA #IMPLIED
-  enableUpdateByPrimaryKey CDATA #IMPLIED
-  enableDeleteByPrimaryKey CDATA #IMPLIED
-  enableDeleteByExample CDATA #IMPLIED
-  enableCountByExample CDATA #IMPLIED
-  enableUpdateByExample CDATA #IMPLIED
-  selectByPrimaryKeyQueryId CDATA #IMPLIED
-  selectByExampleQueryId CDATA #IMPLIED
-  modelType CDATA #IMPLIED
-  escapeWildcards CDATA #IMPLIED
-  delimitIdentifiers CDATA #IMPLIED
-  delimitAllColumns CDATA #IMPLIED>
+  sqlProviderName CDATA  #IMPLIED
+  insert (false) #IMPLIED
+  getById (false) #IMPLIED
+  list (false) #IMPLIED
+  update (false) #IMPLIED
+  delById (false) #IMPLIED
+  >
 
-<!--
-  The columnOverride element is used to change certain attributes of the column
-  from their default values.
--->
-<!ELEMENT columnOverride (property*)>
-<!ATTLIST columnOverride
-  column CDATA #REQUIRED
-  property CDATA #IMPLIED
-  javaType CDATA #IMPLIED
-  jdbcType CDATA #IMPLIED
-  typeHandler CDATA #IMPLIED
-  isGeneratedAlways CDATA #IMPLIED
-  delimitedColumnName CDATA #IMPLIED>
 
-<!--
-  The ignoreColumn element is used to identify a column that should be ignored.
-  No generated SQL will refer to the column, and no property will be generated
-  for the column in the model objects.
--->
-<!ELEMENT ignoreColumn EMPTY>
-<!ATTLIST ignoreColumn
-  column CDATA #REQUIRED
-  delimitedColumnName CDATA #IMPLIED>
 
-<!--
-  The ignoreColumnsByRegex element is used to identify a column pattern that should be ignored.
-  No generated SQL will refer to the column, and no property will be generated
-  for the column in the model objects.
--->
-<!ELEMENT ignoreColumnsByRegex (except*)>
-<!ATTLIST ignoreColumnsByRegex
-  pattern CDATA #REQUIRED>
-
-<!--
-  The except element is used to identify an exception to the ignoreColumnsByRegex rule.
-  If a column matches the regex rule, but also matches the exception, then the
-  column will be included in the generated objects.
--->
-<!ELEMENT except EMPTY>
-<!ATTLIST except
-  column CDATA #REQUIRED
-  delimitedColumnName CDATA #IMPLIED>
-
-<!--
-  The generatedKey element is used to identify a column in the table whose value
-  is calculated - either from a sequence (or some other query), or as an identity column.
--->
-<!ELEMENT generatedKey EMPTY>
-<!ATTLIST generatedKey
-  column CDATA #REQUIRED
-  sqlStatement CDATA #REQUIRED
-  identity CDATA #IMPLIED
-  type CDATA #IMPLIED>
 
 <!--
   The domainObjectRenamingRule element is used to specify a rule for renaming
@@ -246,11 +179,4 @@
   searchString CDATA #REQUIRED
   replaceString CDATA #IMPLIED>
 
-<!--
-  The commentGenerator element is used to define properties of the Comment Generator.
-  The Comment Generator adds comments to generated elements.
--->
-<!ELEMENT commentGenerator (property*)>
-<!ATTLIST commentGenerator
-  type CDATA #IMPLIED>
   

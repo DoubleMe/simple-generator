@@ -16,6 +16,10 @@
 package com.chm.generator.configuration.config;
 
 import com.chm.generator.configuration.config.properties.PropertyHolder;
+import com.chm.generator.dataobject.Column;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class TableConfiguration.
@@ -24,25 +28,15 @@ import com.chm.generator.configuration.config.properties.PropertyHolder;
  */
 public class TableConfiguration extends PropertyHolder {
 
-    private boolean insertStatementEnabled;
+    private boolean insertEnabled = true;
 
-    private boolean selectByPrimaryKeyStatementEnabled;
+    private boolean getByIdEnabled = true;
 
-    private boolean selectByExampleStatementEnabled;
+    private boolean listEnabled = true;
 
-    private boolean updateByPrimaryKeyStatementEnabled;
+    private boolean updateEnabled = true;
 
-    private boolean deleteByPrimaryKeyStatementEnabled;
-
-    private boolean deleteByExampleStatementEnabled;
-
-    private boolean countByExampleStatementEnabled;
-
-    private boolean updateByExampleStatementEnabled;
-
-    private String selectByPrimaryKeyQueryId;
-
-    private String selectByExampleQueryId;
+    private boolean delByIdEnabled = true;
 
     private String catalog;
 
@@ -66,105 +60,61 @@ public class TableConfiguration extends PropertyHolder {
 
     private String sqlProviderName;
 
+    private List<Column> ignoreColumns = new ArrayList<>();
 
-    public boolean isInsertStatementEnabled() {
+    private RenamingRule domainObjectRenamingRule;
 
-        return insertStatementEnabled;
+    private RenamingRule columnRenamingRule;
+
+
+    public boolean isInsertEnabled() {
+
+        return insertEnabled;
     }
 
-    public void setInsertStatementEnabled(boolean insertStatementEnabled) {
+    public void setInsertEnabled(boolean insertEnabled) {
 
-        this.insertStatementEnabled = insertStatementEnabled;
+        this.insertEnabled = insertEnabled;
     }
 
-    public boolean isSelectByPrimaryKeyStatementEnabled() {
+    public boolean isGetByIdEnabled() {
 
-        return selectByPrimaryKeyStatementEnabled;
+        return getByIdEnabled;
     }
 
-    public void setSelectByPrimaryKeyStatementEnabled(boolean selectByPrimaryKeyStatementEnabled) {
+    public void setGetByIdEnabled(boolean getByIdEnabled) {
 
-        this.selectByPrimaryKeyStatementEnabled = selectByPrimaryKeyStatementEnabled;
+        this.getByIdEnabled = getByIdEnabled;
     }
 
-    public boolean isSelectByExampleStatementEnabled() {
+    public boolean isListEnabled() {
 
-        return selectByExampleStatementEnabled;
+        return listEnabled;
     }
 
-    public void setSelectByExampleStatementEnabled(boolean selectByExampleStatementEnabled) {
+    public void setListEnabled(boolean listEnabled) {
 
-        this.selectByExampleStatementEnabled = selectByExampleStatementEnabled;
+        this.listEnabled = listEnabled;
     }
 
-    public boolean isUpdateByPrimaryKeyStatementEnabled() {
+    public boolean isUpdateEnabled() {
 
-        return updateByPrimaryKeyStatementEnabled;
+        return updateEnabled;
     }
 
-    public void setUpdateByPrimaryKeyStatementEnabled(boolean updateByPrimaryKeyStatementEnabled) {
+    public void setUpdateEnabled(boolean updateEnabled) {
 
-        this.updateByPrimaryKeyStatementEnabled = updateByPrimaryKeyStatementEnabled;
+        this.updateEnabled = updateEnabled;
     }
 
-    public boolean isDeleteByPrimaryKeyStatementEnabled() {
+    public boolean isDelByIdEnabled() {
 
-        return deleteByPrimaryKeyStatementEnabled;
+        return delByIdEnabled;
     }
 
-    public void setDeleteByPrimaryKeyStatementEnabled(boolean deleteByPrimaryKeyStatementEnabled) {
+    public void setDelByIdEnabled(boolean delByIdEnabled) {
 
-        this.deleteByPrimaryKeyStatementEnabled = deleteByPrimaryKeyStatementEnabled;
-    }
-
-    public boolean isDeleteByExampleStatementEnabled() {
-
-        return deleteByExampleStatementEnabled;
-    }
-
-    public void setDeleteByExampleStatementEnabled(boolean deleteByExampleStatementEnabled) {
-
-        this.deleteByExampleStatementEnabled = deleteByExampleStatementEnabled;
-    }
-
-    public boolean isCountByExampleStatementEnabled() {
-
-        return countByExampleStatementEnabled;
-    }
-
-    public void setCountByExampleStatementEnabled(boolean countByExampleStatementEnabled) {
-
-        this.countByExampleStatementEnabled = countByExampleStatementEnabled;
-    }
-
-    public boolean isUpdateByExampleStatementEnabled() {
-
-        return updateByExampleStatementEnabled;
-    }
-
-    public void setUpdateByExampleStatementEnabled(boolean updateByExampleStatementEnabled) {
-
-        this.updateByExampleStatementEnabled = updateByExampleStatementEnabled;
-    }
-
-    public String getSelectByPrimaryKeyQueryId() {
-
-        return selectByPrimaryKeyQueryId;
-    }
-
-    public void setSelectByPrimaryKeyQueryId(String selectByPrimaryKeyQueryId) {
-
-        this.selectByPrimaryKeyQueryId = selectByPrimaryKeyQueryId;
-    }
-
-    public String getSelectByExampleQueryId() {
-
-        return selectByExampleQueryId;
-    }
-
-    public void setSelectByExampleQueryId(String selectByExampleQueryId) {
-
-        this.selectByExampleQueryId = selectByExampleQueryId;
+        this.delByIdEnabled = delByIdEnabled;
     }
 
     public String getCatalog() {
@@ -275,5 +225,40 @@ public class TableConfiguration extends PropertyHolder {
     public void setSqlProviderName(String sqlProviderName) {
 
         this.sqlProviderName = sqlProviderName;
+    }
+
+    public List<Column> getIgnoreColumns() {
+
+        return ignoreColumns;
+    }
+
+    public void addIgnoreColumns(Column ignoreColumn) {
+
+        this.ignoreColumns.add(ignoreColumn);
+    }
+
+    public void setIgnoreColumns(List<Column> ignoreColumns) {
+
+        this.ignoreColumns = ignoreColumns;
+    }
+
+    public RenamingRule getDomainObjectRenamingRule() {
+
+        return domainObjectRenamingRule;
+    }
+
+    public void setDomainObjectRenamingRule(RenamingRule domainObjectRenamingRule) {
+
+        this.domainObjectRenamingRule = domainObjectRenamingRule;
+    }
+
+    public RenamingRule getColumnRenamingRule() {
+
+        return columnRenamingRule;
+    }
+
+    public void setColumnRenamingRule(RenamingRule columnRenamingRule) {
+
+        this.columnRenamingRule = columnRenamingRule;
     }
 }

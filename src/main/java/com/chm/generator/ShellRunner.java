@@ -4,38 +4,90 @@ import com.chm.generator.configuration.Configuration;
 import com.chm.generator.configuration.ConfigurationParser;
 import com.chm.generator.configuration.config.Context;
 import com.chm.generator.connection.executor.DBConfigAdapter;
-import com.chm.generator.dataobject.table.TableInfo;
+import com.chm.generator.dataobject.Table;
+import com.chm.generator.generate.AbstractGenerator;
+import com.chm.generator.generate.GeneratorConfigHolder;
+import com.chm.generator.generate.GeneratorExecutor;
+import com.chm.generator.generate.javafile.JavaModelGenerator;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author chen-hongmin
- * @since  2017/9/10 15:30.
  * @version V1.0
+ * @since 2017/9/10 15:30.
  */
 public class ShellRunner {
 
+    private static final String CONFIG_FILE = "-configfile"; //$NON-NLS-1$
 
-    public static void main(String[] args) throws Exception{
+    private static final String PROJECT_PATH = "-project"; //$NON-NLS-1$
 
-        String configFile = "/config/config.xml";
+    private static final String DEFAULT_CONFIG_FILE = "/config/config.xml"; //$NON-NLS-1$
 
+    public static void main(String[] args) throws Exception {
+
+//        String configFile = "/config/config.xml";
+
+        Map<String, String> map = parseCommandLine(args);
+
+        String configFile = map.get(CONFIG_FILE);
+        if (configFile == null){
+            writeLine("configFile is null");
+            System.exit(0);
+        }
+        String projectPath = map.get(PROJECT_PATH);
+        if (projectPath == null){
+            writeLine("info : projectPath is null");
+        }
+        File configurationFile = new File(configFile);
+        if (!configurationFile.exists()){
+            writeLine("configFile is not exists");
+            System.exit(0);
+        }
+
+        InputStream inputStream = new FileInputStream(configurationFile);
         ConfigurationParser parser = new ConfigurationParser();
-        InputStream inputStream = parser.getClass().getResourceAsStream(configFile);
 
         Configuration configuration = parser.parseConfiguration(inputStream);
 
         List<Context> contexts = configuration.getContexts();
-        for (Context context : contexts){
+        for (Context context : contexts) {
 
+            if (projectPath != null){
+                context.resetProjectPath(projectPath);
+            }
             DBConfigAdapter dbConfigAdapter = new DBConfigAdapter(context);
-            List<TableInfo> tables = dbConfigAdapter.getTables(context);
+            GeneratorConfigHolder configHolder = dbConfigAdapter.getGenerator();
+            GeneratorExecutor.execute(configHolder);
 
-            System.out.println(tables);
+        }
+    }
+
+    private static Map<String, String> parseCommandLine(String[] args) {
+
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < args.length; i++) {
+            if (CONFIG_FILE.equalsIgnoreCase(args[i])) {
+                map.put(CONFIG_FILE, args[i + 1]);
+                i++;
+            }
+            if (PROJECT_PATH.equals(args[i])){
+                map.put(PROJECT_PATH, args[i + 1]);
+                i++;
+            }
         }
 
-        System.out.println(configFile);
+        return map;
+    }
 
+    private static void writeLine(String line) {
+
+        System.out.println(line);
     }
 }

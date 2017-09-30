@@ -2,13 +2,8 @@
 <!DOCTYPE generatorConfiguration SYSTEM "mybatis-generator-config.dtd">
 
 <generatorConfiguration>
-    <properties></properties>
-    <classPathEntry location="cvxv"/>
+    <classPathEntry location="D:\generator\mysql-connector-java-5.1.34.jar"/>
     <context id="mybatis">
-
-        <commentGenerator>
-            <property name="suppressAllComments" value="true" />
-        </commentGenerator>
         <!-- 数据库链接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://192.168.3.230:3309/yuhuan_health?characterEncoding=utf8"
@@ -18,20 +13,20 @@
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
         <!-- model 数据模型 -->
-        <javaModelGenerator targetPackage="dataobject" targetProject="D:\generator\yuhuan-health\src\">
+        <javaModelGenerator targetPackage="com.chm.mybatis.dataobject" targetProject="D:\generator\yuhuan-health\src\">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
         <!-- sqlMapper -->
-        <sqlMapGenerator targetPackage="sqlMapper" targetProject="D:\generator\yuhuan-health\src">
+        <sqlMapGenerator targetPackage="com.chm.mybatis.sqlMapper" targetProject="D:\generator\yuhuan-health\src">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
         <!-- javaMapper-->
-        <javaMapperGenerator type="XMLMAPPER" targetPackage="mapper" targetProject="D:\generator\yuhuan-health\src">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.chm.mybatis.mapper" targetProject="D:\generator\yuhuan-health\src">
             <property name="enableSubPackages" value="true" />
-        </javaMapperGenerator>
-        <table tableName="t_">
-
+        </javaClientGenerator>
+        <table tableName="t_org_info" alias="" mapperName="OrgInfoMapper" domainObjectName="OrgInfoDO" insert="false" getById="false">
+            <domainObjectRenamingRule searchString="t_" replaceString=""/>
         </table>
     </context>
 </generatorConfiguration>

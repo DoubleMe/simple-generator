@@ -2,7 +2,6 @@ apply plugin: 'war'
 apply plugin: 'jetty'
 
 allprojects {
-    apply plugin: 'javamodel'
     apply plugin: 'idea'
     configurations {
         all*.exclude group: 'commons-logging', module: 'commons-logging'
@@ -52,7 +51,7 @@ allprojects {
         compile("com.alibaba:druid:1.0.15")
         compile("org.aspectj:aspectjrt:1.8.6")
         compile("org.aspectj:aspectjweaver:1.8.6")
-        compile("mysql:mysql-connector-javamodel:5.1.33")
+        compile("mysql:mysql-connector-java:5.1.33")
         compile("com.alibaba:fastjson:1.2.8")
     }
 
@@ -99,11 +98,12 @@ task buildShareJar(dependsOn: [cleanAll,copyJar,jar],type: Jar){
         attributes 'Implementation-Version': version
         attributes 'Created-By': author
         attributes 'Main-Class': 'com.chm.generator.ShellRunner'
-        attributes 'Class-Path': configurations.compile.collect {'lib/' + it.getName()}.join(' ')
+//        attributes 'Class-Path': configurations.compile.collect {'lib/' + it.getName()}.join(' ')
     }
     from({
         sourceSets.main.output.classesDir
     })
+    destinationDir  = file( 'D:\\data')
     archiveName = "$shareModuleName-${shareVersion}.jar"
 }
 
@@ -117,5 +117,16 @@ task javaDoc(type:org.gradle.api.tasks.javadoc.Javadoc){
     include 'com/chm/generator/doc/**'
     exclude '**/impl'
 }
+
+task mybatisGenerator(){
+    def jarFile = "D:\\data\\mybatis-generator-1.0.0.jar"
+    def configFile = "D:\\data\\config.xml"
+    def projectPath = rootDir.getAbsolutePath()
+    def cmd = "java -jar " + jarFile + " -configfile " + configFile + " -project " + projectPath
+    println cmd
+    Process p = cmd.execute()
+    println "${p.text}"
+}
+
 
 

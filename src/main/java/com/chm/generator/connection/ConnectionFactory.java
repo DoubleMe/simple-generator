@@ -2,6 +2,7 @@ package com.chm.generator.connection;
 
 import com.chm.generator.configuration.JDBCConnectionConfiguration;
 import com.chm.generator.message.MessageSource;
+import com.chm.generator.utils.ClassLoaderHolder;
 
 import static com.chm.generator.utils.StringUtility.stringHasValue;
 
@@ -64,8 +65,7 @@ public class ConnectionFactory {
         Driver driver = null;
 
         try {
-            ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            Class<?> clazz = Class.forName(driverClass, true, cl);
+            Class<?> clazz = ClassLoaderHolder.externalClassForName(driverClass);
             driver = (Driver) clazz.newInstance();
         } catch (Exception e) {
             throw new RuntimeException(MessageSource.getMessage("RuntimeError.0"), e);

@@ -1,4 +1,4 @@
-package com.chm.generator.dataobject.column;
+package com.chm.generator.dataobject;
 
 /**
  * @author chen-hongmin

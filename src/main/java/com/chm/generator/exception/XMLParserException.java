@@ -64,7 +64,7 @@ public class XMLParserException extends Exception {
     }
 
     /* (non-Javadoc)
-     * @see javamodel.lang.Throwable#getMessage()
+     * @see javafile.lang.Throwable#getMessage()
      */
     @Override
     public String getMessage() {

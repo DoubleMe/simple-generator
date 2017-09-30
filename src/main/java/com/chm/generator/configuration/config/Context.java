@@ -136,4 +136,21 @@ public class Context extends PropertyHolder {
 
         tableConfigurations.add(tableConfiguration);
     }
+
+    public void resetProjectPath(String project){
+
+        //工程java 路径
+        String projectJava = project + "\\src\\main\\java";
+        //工程javaResources 路径
+        String projectResource = project + "\\src\\main\\resources";
+        if (this.javaModelGeneratorConfiguration != null){
+            javaModelGeneratorConfiguration.setTargetProject(projectJava);
+        }
+        if (this.javaClientGeneratorConfiguration != null){
+            javaClientGeneratorConfiguration.setTargetProject(projectJava);
+        }
+        if (this.sqlMapGeneratorConfiguration != null){
+            sqlMapGeneratorConfiguration.setTargetProject(projectResource);
+        }
+    }
 }

@@ -29,12 +29,14 @@
 package com.chm.generator.configuration;
 
 import com.chm.generator.configuration.config.Context;
+import com.chm.generator.configuration.config.RenamingRule;
 import com.chm.generator.configuration.config.TableConfiguration;
 import com.chm.generator.configuration.config.properties.PropertyHolder;
 import com.chm.generator.constants.ElementConstants;
+import com.chm.generator.dataobject.Column;
 import com.chm.generator.exception.XMLParserException;
+import com.chm.generator.utils.ClassLoaderHolder;
 import org.w3c.dom.*;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import static com.chm.generator.utils.StringUtility.isTrue;
+import static com.chm.generator.utils.StringUtility.isFalse;
 import static com.chm.generator.utils.StringUtility.stringHasValue;
 
 /**
@@ -244,54 +247,29 @@ public class ConfigurationParser {
             tc.setAlias(alias);
         }
 
-        String enableInsert = attributes.getProperty("enableInsert"); //$NON-NLS-1$
+        String enableInsert = attributes.getProperty("insert"); //$NON-NLS-1$
         if (stringHasValue(enableInsert)) {
-            tc.setInsertStatementEnabled(isTrue(enableInsert));
+            tc.setInsertEnabled(!isFalse(enableInsert));
         }
 
-        String enableSelectByPrimaryKey = attributes.getProperty("enableSelectByPrimaryKey"); //$NON-NLS-1$
-        if (stringHasValue(enableSelectByPrimaryKey)) {
-            tc.setSelectByPrimaryKeyStatementEnabled(isTrue(enableSelectByPrimaryKey));
+        String enableGetById = attributes.getProperty("getById"); //$NON-NLS-1$
+        if (stringHasValue(enableGetById)) {
+            tc.setGetByIdEnabled(!isFalse(enableGetById));
         }
 
-        String enableSelectByExample = attributes.getProperty("enableSelectByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableSelectByExample)) {
-            tc.setSelectByExampleStatementEnabled(isTrue(enableSelectByExample));
+        String enableList = attributes.getProperty("list"); //$NON-NLS-1$
+        if (stringHasValue(enableList)) {
+            tc.setListEnabled(!isFalse(enableList));
         }
 
-        String enableUpdateByPrimaryKey = attributes.getProperty("enableUpdateByPrimaryKey"); //$NON-NLS-1$
-        if (stringHasValue(enableUpdateByPrimaryKey)) {
-            tc.setUpdateByPrimaryKeyStatementEnabled(isTrue(enableUpdateByPrimaryKey));
+        String enableUpdate = attributes.getProperty("update"); //$NON-NLS-1$
+        if (stringHasValue(enableUpdate)) {
+            tc.setUpdateEnabled(!isFalse(enableUpdate));
         }
 
-        String enableDeleteByPrimaryKey = attributes.getProperty("enableDeleteByPrimaryKey"); //$NON-NLS-1$
-        if (stringHasValue(enableDeleteByPrimaryKey)) {
-            tc.setDeleteByPrimaryKeyStatementEnabled(isTrue(enableDeleteByPrimaryKey));
-        }
-
-        String enableDeleteByExample = attributes.getProperty("enableDeleteByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableDeleteByExample)) {
-            tc.setDeleteByExampleStatementEnabled(isTrue(enableDeleteByExample));
-        }
-
-        String enableCountByExample = attributes.getProperty("enableCountByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableCountByExample)) {
-            tc.setCountByExampleStatementEnabled(isTrue(enableCountByExample));
-        }
-
-        String enableUpdateByExample = attributes.getProperty("enableUpdateByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableUpdateByExample)) {
-            tc.setUpdateByExampleStatementEnabled(isTrue(enableUpdateByExample));
-        }
-
-        String selectByPrimaryKeyQueryId = attributes.getProperty("selectByPrimaryKeyQueryId"); //$NON-NLS-1$
-        if (stringHasValue(selectByPrimaryKeyQueryId)) {
-            tc.setSelectByPrimaryKeyQueryId(selectByPrimaryKeyQueryId);
-        }
-
-        String selectByExampleQueryId = attributes.getProperty("selectByExampleQueryId"); //$NON-NLS-1$
-        if (stringHasValue(selectByExampleQueryId)) {
-            tc.setSelectByExampleQueryId(selectByExampleQueryId);
+        String enableDelById = attributes.getProperty("delById"); //$NON-NLS-1$
+        if (stringHasValue(enableDelById)) {
+            tc.setDelByIdEnabled(!isFalse(enableDelById));
         }
 
         String modelType = attributes.getProperty("modelType"); //$NON-NLS-1$
@@ -327,7 +305,15 @@ public class ConfigurationParser {
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
-            parseProperty(tc, childNode);
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(tc, childNode);
+            } else if ("ignoreColumn".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseIgnoreColumn(tc, childNode);
+            } else if ("domainObjectRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseDomainObjectRenamingRule(tc, childNode);
+            } else if ("columnRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseColumnRenamingRule(tc, childNode);
+            }
         }
     }
 
@@ -358,7 +344,7 @@ public class ConfigurationParser {
     }
 
     /**
-     * 解析 javamodel 客户端接口信息
+     * 解析 javafile 客户端接口信息
      *
      * @param context
      * @param node
@@ -370,7 +356,6 @@ public class ConfigurationParser {
         context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
 
         Properties attributes = parseAttributes(node);
-        String type = attributes.getProperty("type"); //$NON-NLS-1$
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
 
@@ -430,7 +415,8 @@ public class ConfigurationParser {
     protected void parseClassPathEntry(Configuration configuration, Node node) {
 
         Properties attributes = parseAttributes(node);
-
+        String location = attributes.getProperty("location");
+        ClassLoaderHolder.addExternalClassLoader(location);
         configuration.setClassPathEntries(attributes.getProperty("location")); //$NON-NLS-1$
     }
 
@@ -473,6 +459,51 @@ public class ConfigurationParser {
         }
 
         return attributes;
+    }
+
+    private void parseIgnoreColumn(TableConfiguration tc, Node node) {
+
+        Properties attributes = parseAttributes(node);
+        String column = attributes.getProperty("column"); //$NON-NLS-1$
+        Column ic = new Column();
+
+        ic.setColumnName(column);
+
+        tc.addIgnoreColumns(ic);
+    }
+
+    private void parseDomainObjectRenamingRule(TableConfiguration tc, Node node) {
+
+        Properties attributes = parseAttributes(node);
+        String searchString = attributes.getProperty("searchString"); //$NON-NLS-1$
+        String replaceString = attributes.getProperty("replaceString"); //$NON-NLS-1$
+
+        RenamingRule dorr = new RenamingRule();
+
+        dorr.setSearchString(searchString);
+
+        if (stringHasValue(replaceString)) {
+            dorr.setReplaceString(replaceString);
+        }
+
+        tc.setDomainObjectRenamingRule(dorr);
+    }
+
+    private void parseColumnRenamingRule(TableConfiguration tc, Node node) {
+
+        Properties attributes = parseAttributes(node);
+        String searchString = attributes.getProperty("searchString"); //$NON-NLS-1$
+        String replaceString = attributes.getProperty("replaceString"); //$NON-NLS-1$
+
+        RenamingRule dorr = new RenamingRule();
+
+        dorr.setSearchString(searchString);
+
+        if (stringHasValue(replaceString)) {
+            dorr.setReplaceString(replaceString);
+        }
+
+        tc.setColumnRenamingRule(dorr);
     }
 
 

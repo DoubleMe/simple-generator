@@ -87,4 +87,23 @@ public class JavaTypeResolver {
         return typeName;
     }
 
+    /**
+     * 获取jdbcType 类型 未知类型 用Object
+     * @param jdbcType
+     * @return
+     */
+    public static String getSimpleTypeName(Integer jdbcType){
+
+        String typeName = typeMap.get(jdbcType);
+
+        if (typeName == null){
+            typeName = Object.class.getName();
+        }
+        int index = typeName.lastIndexOf(".");
+        if (index != -1) {
+            typeName = typeName.substring(index + 1, typeName.length());
+        }
+        return typeName;
+    }
+
 }
