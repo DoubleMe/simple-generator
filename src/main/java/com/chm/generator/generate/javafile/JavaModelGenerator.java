@@ -99,7 +99,7 @@ public class JavaModelGenerator extends AbstractJavaGenerator {
 
         methodModel.setMethodName(JavaBeansUtil.getGetterMethodName(columnName, jdbcType));
         methodModel.setReturnType(new ReturnType(jdbcType, simpleType));
-        methodModel.setVisibility(JavaVisibility.PRIVATE.getValue());
+        methodModel.setVisibility(JavaVisibility.PUBLIC.getValue());
 
         newTab(sb, LevelConstants.LEVEL_BODY);
         sb.append("return this.").append(columnName).append(";");
@@ -123,7 +123,7 @@ public class JavaModelGenerator extends AbstractJavaGenerator {
 
         MethodModel methodModel = new MethodModel();
         methodModel.setMethodName(JavaBeansUtil.getSetterMethodName(columnName));
-        methodModel.setVisibility(JavaVisibility.PRIVATE.getValue());
+        methodModel.setVisibility(JavaVisibility.PUBLIC.getValue());
 
         StringBuilder sb = new StringBuilder();
         newTab(sb, LevelConstants.LEVEL_BODY);

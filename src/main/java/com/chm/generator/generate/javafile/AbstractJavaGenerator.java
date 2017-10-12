@@ -61,7 +61,7 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
                 newLine(sb,LevelConstants.LEVEL_BODY);
             }
         }
-        newLine(sb);
+//        newLine(sb);
         List<MethodModel> methodModels = classModel.getMethodModels();
         if (!methodModels.isEmpty()){
             for (MethodModel methodModel : methodModels){

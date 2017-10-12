@@ -45,18 +45,18 @@ public class JavaClientGenerator extends AbstractJavaGenerator {
                 String targetProject = configuration.getTargetProject();
 
                 classModel.setPackageName(targetPackage);
-                classModel.setClassName(getMapperName(introspectedTable));
+                classModel.setClassName(getMapperName(introspectedTable, configuration.getDomainObjectRenamingRule()));
                 classModel.setClassType(ClassType.INTERFACE);
                 classModel.setRemarks(introspectedTable.getTable().getRemark());
-                addMethod(classModel,introspectedTable);
+                addMethod(classModel, introspectedTable);
                 String source = classModelTOString(classModel);
                 File directory = getDirectory(targetProject, targetPackage);
-                writeFile(directory, source, getMapperName(introspectedTable));
+                writeFile(directory, source, getMapperName(introspectedTable, configuration.getDomainObjectRenamingRule()));
             }
         }
     }
 
-    private void addMethod(ClassModel classModel,IntrospectedTable it) {
+    private void addMethod(ClassModel classModel, IntrospectedTable it) {
 
         TableConfiguration tc = it.getConfiguration();
         Table table = it.getTable();
@@ -68,7 +68,7 @@ public class JavaClientGenerator extends AbstractJavaGenerator {
             MethodModel methodModel = new MethodModel();
             methodModel.setInterface(true);
             methodModel.setMethodName(MethodEnums.INSERT.getMethodName());
-            methodModel.setReturnType(new ReturnType(Integer.class.getName(),"int"));
+            methodModel.setReturnType(new ReturnType(Integer.class.getName(), "int"));
             methodModel.setRemark(MethodEnums.INSERT.getRemark());
             Parameter parameter = new Parameter(domainType, dsName, JavaBeansUtil.firstToLowerCase(dsName));
             methodModel.addParameter(parameter);
@@ -80,7 +80,7 @@ public class JavaClientGenerator extends AbstractJavaGenerator {
             MethodModel methodModel = new MethodModel();
             methodModel.setInterface(true);
             methodModel.setMethodName(MethodEnums.UPDATE.getMethodName());
-            methodModel.setReturnType(new ReturnType(Integer.class.getName(),"int"));
+            methodModel.setReturnType(new ReturnType(Integer.class.getName(), "int"));
             methodModel.setRemark(MethodEnums.UPDATE.getRemark());
             Parameter parameter = new Parameter(domainType, dsName, JavaBeansUtil.firstToLowerCase(dsName));
             methodModel.addParameter(parameter);
@@ -91,9 +91,9 @@ public class JavaClientGenerator extends AbstractJavaGenerator {
             MethodModel methodModel = new MethodModel();
             methodModel.setInterface(true);
             methodModel.setMethodName(MethodEnums.GETBYID.getMethodName());
-            methodModel.setReturnType(new ReturnType(domainType,dsName));
+            methodModel.setReturnType(new ReturnType(domainType, dsName));
             methodModel.setRemark(MethodEnums.GETBYID.getRemark());
-            for (Column column : table.getKeys()){
+            for (Column column : table.getKeys()) {
 
                 methodModel.addParameter(keyParameter(column));
             }
@@ -105,9 +105,9 @@ public class JavaClientGenerator extends AbstractJavaGenerator {
             MethodModel methodModel = new MethodModel();
             methodModel.setInterface(true);
             methodModel.setMethodName(MethodEnums.DELBYID.getMethodName());
-            methodModel.setReturnType(new ReturnType(Integer.class.getName(),"int"));
+            methodModel.setReturnType(new ReturnType(Integer.class.getName(), "int"));
             methodModel.setRemark(MethodEnums.DELBYID.getRemark());
-            for (Column column : table.getKeys()){
+            for (Column column : table.getKeys()) {
                 methodModel.addParameter(keyParameter(column));
             }
             classModel.addMethod(methodModel);
@@ -133,10 +133,11 @@ public class JavaClientGenerator extends AbstractJavaGenerator {
 
     /**
      * 主键参数
+     *
      * @param column
      * @return
      */
-    private Parameter keyParameter(Column column){
+    private Parameter keyParameter(Column column) {
         String javaType = JavaTypeResolver.getJdbcTypeName(column.getJdbcType());
         String simpleType = JavaTypeResolver.getSimpleTypeName(column.getJdbcType());
         Parameter parameter = new Parameter(javaType, simpleType, column.getColumnName());

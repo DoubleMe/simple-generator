@@ -1,5 +1,4 @@
 apply plugin: 'war'
-apply plugin: 'jetty'
 
 allprojects {
     apply plugin: 'idea'
@@ -103,7 +102,7 @@ task buildShareJar(dependsOn: [cleanAll,copyJar,jar],type: Jar){
     from({
         sourceSets.main.output.classesDir
     })
-    destinationDir  = file( 'D:\\data')
+    destinationDir  = file( 'E:\\generate')
     archiveName = "$shareModuleName-${shareVersion}.jar"
 }
 
@@ -119,11 +118,13 @@ task javaDoc(type:org.gradle.api.tasks.javadoc.Javadoc){
 }
 
 task mybatisGenerator(){
-    def jarFile = "D:\\data\\mybatis-generator-1.0.0.jar"
-    def configFile = "D:\\data\\config.xml"
+    def jarFile = "E:\\generate\\mybatis-generator-1.0.0.jar"
+    def configFile = "E:\\generate\\config.xml"
     def projectPath = rootDir.getAbsolutePath()
     def cmd = "java -jar " + jarFile + " -configfile " + configFile + " -project " + projectPath
-    println cmd
+    println "**********************************************************************"
+    println "shell: " + cmd
+    println " "
     Process p = cmd.execute()
     println "${p.text}"
 }

@@ -50,7 +50,7 @@
   The context element is used to describe a context for generating files, and the source
   tables.
 -->
-<!ELEMENT context (property*, plugin*, jdbcConnection?, javaTypeResolver?,
+<!ELEMENT context (property*,jdbcConnection?,
                          javaModelGenerator, sqlMapGenerator?, javaClientGenerator?, table+)>
 <!ATTLIST context id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
@@ -89,38 +89,22 @@
   value CDATA #REQUIRED>
 
 <!--
-  The plugin element is used to define a plugin.
--->
-<!ELEMENT plugin (property*)>
-<!ATTLIST plugin
-  type CDATA #REQUIRED>
-
-<!--
   The javaModelGenerator element is used to define properties of the Java Model Generator.
   The Java Model Generator builds primary key classes, record classes, and Query by Example 
   indicator classes.
 -->
-<!ELEMENT javaModelGenerator (property*)>
+<!ELEMENT javaModelGenerator (property*,domainObjectRenamingRule?)>
 <!ATTLIST javaModelGenerator
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED>
 
-<!--
-  The javaTypeResolver element is used to define properties of the Java Type Resolver.
-  The Java Type Resolver is used to calculate Java types from database column information.
-  The default Java Type Resolver attempts to make JDBC DECIMAL and NUMERIC types easier
-  to use by substituting Integral types if possible (Long, Integer, Short, etc.)
--->
-<!ELEMENT javaTypeResolver (property*)>
-<!ATTLIST javaTypeResolver
-  type CDATA #IMPLIED>
 
 <!--
   The sqlMapGenerator element is used to define properties of the SQL Map Generator.
   The SQL Map Generator builds an XML file for each table that conforms to iBATIS'
   SqlMap DTD.
 -->
-<!ELEMENT sqlMapGenerator (property*)>
+<!ELEMENT sqlMapGenerator (property*,domainObjectRenamingRule?)>
 <!ATTLIST sqlMapGenerator
   targetPackage CDATA #REQUIRED
   targetProject CDATA #REQUIRED>
@@ -131,7 +115,7 @@
   (as required) for each table.
   If this element is missing, then the generator will not build Java Client classes.
 -->
-<!ELEMENT javaClientGenerator (property*)>
+<!ELEMENT javaClientGenerator (property*,domainObjectRenamingRule?)>
 <!ATTLIST javaClientGenerator
   type CDATA #REQUIRED
   targetPackage CDATA #REQUIRED
@@ -142,7 +126,7 @@
   The table element is used to specify a database table that will be the source information
   for a set of generated objects.
 -->
-<!ELEMENT table (property*, domainObjectRenamingRule?, columnRenamingRule?) >
+<!ELEMENT table (property*, columnRenamingRule?) >
 <!ATTLIST table
   catalog CDATA #IMPLIED
   schema CDATA #IMPLIED
@@ -168,7 +152,9 @@
 <!ELEMENT domainObjectRenamingRule EMPTY>
 <!ATTLIST domainObjectRenamingRule
   searchString CDATA #REQUIRED
-  replaceString CDATA #IMPLIED>
+  replaceString CDATA #IMPLIED
+  prefix CDATA #IMPLIED
+  suffix CDATA #IMPLIED>
 
 <!--
   The columnRenamingRule element is used to specify a rule for renaming

@@ -2,31 +2,27 @@
 <!DOCTYPE generatorConfiguration SYSTEM "mybatis-generator-config.dtd">
 
 <generatorConfiguration>
-    <classPathEntry location="D:\generator\mysql-connector-java-5.1.34.jar"/>
+    <classPathEntry location="E:\generate\mysql-connector-java-5.1.34.jar"/>
     <context id="mybatis">
         <!-- 数据库链接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.3.230:3309/yuhuan_health?characterEncoding=utf8"
-                        userId="yuhuan_health" password="VDNLS2WuLmjX8uwP">
+                        connectionURL="jdbc:mysql://localhost:3306/local_project?characterEncoding=utf8"
+                        userId="root" password="">
         </jdbcConnection>
-        <javaTypeResolver>
-            <property name="forceBigDecimals" value="false" />
-        </javaTypeResolver>
         <!-- model 数据模型 -->
-        <javaModelGenerator targetPackage="com.chm.mybatis.dataobject" targetProject="D:\generator\yuhuan-health\src\">
-            <property name="enableSubPackages" value="true" />
-            <property name="trimStrings" value="true" />
+        <javaModelGenerator targetPackage="dataobject" targetProject="D:\generator\yuhuan-health\src\">
+            <domainObjectRenamingRule searchString="^t_" replaceString="" suffix="DO"/>
         </javaModelGenerator>
-        <!-- sqlMapper -->
-        <sqlMapGenerator targetPackage="com.chm.mybatis.sqlMapper" targetProject="D:\generator\yuhuan-health\src">
-            <property name="enableSubPackages" value="true" />
-        </sqlMapGenerator>
-        <!-- javaMapper-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.chm.mybatis.mapper" targetProject="D:\generator\yuhuan-health\src">
-            <property name="enableSubPackages" value="true" />
-        </javaClientGenerator>
-        <table tableName="t_org_info" alias="" mapperName="OrgInfoMapper" domainObjectName="OrgInfoDO" insert="false" getById="false">
-            <domainObjectRenamingRule searchString="t_" replaceString=""/>
+        <!--&lt;!&ndash; sqlMapper &ndash;&gt;-->
+        <!--<sqlMapGenerator targetPackage="com.chm.mybatis.sqlMapper" targetProject="D:\generator\yuhuan-health\src">-->
+            <!--<domainObjectRenamingRule searchString="t_" replaceString="" suffix="Mapper"/>-->
+        <!--</sqlMapGenerator>-->
+        <!--&lt;!&ndash; javaMapper&ndash;&gt;-->
+        <!--<javaClientGenerator type="XMLMAPPER" targetPackage="com.chm.mybatis.mapper" targetProject="D:\generator\yuhuan-health\src">-->
+            <!--<domainObjectRenamingRule searchString="t_" replaceString="" suffix="Mapper"/>-->
+        <!--</javaClientGenerator>-->
+        <table tableName="t_%">
+            <!--<domainObjectRenamingRule searchString="^t_" replaceString="" prefix="" suffix="DO"/>-->
         </table>
     </context>
 </generatorConfiguration>

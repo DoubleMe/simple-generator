@@ -15,6 +15,7 @@
  */
 package com.chm.generator.configuration.config.properties;
 
+import com.chm.generator.configuration.config.RenamingRule;
 import com.chm.generator.configuration.config.xml.Attribute;
 import com.chm.generator.configuration.config.xml.XmlElement;
 
@@ -27,6 +28,10 @@ import java.util.Properties;
 public abstract class PropertyHolder {
 
     private Properties properties;
+
+    private RenamingRule domainObjectRenamingRule;
+
+    private RenamingRule columnRenamingRule;
 
     public PropertyHolder() {
 
@@ -47,6 +52,24 @@ public abstract class PropertyHolder {
     public Properties getProperties() {
 
         return properties;
+    }
+    public RenamingRule getDomainObjectRenamingRule() {
+
+        return domainObjectRenamingRule;
+    }
+
+    public void setDomainObjectRenamingRule(RenamingRule domainObjectRenamingRule) {
+
+        this.domainObjectRenamingRule = domainObjectRenamingRule;
+    }
+    public RenamingRule getColumnRenamingRule() {
+
+        return columnRenamingRule;
+    }
+
+    public void setColumnRenamingRule(RenamingRule columnRenamingRule) {
+
+        this.columnRenamingRule = columnRenamingRule;
     }
 
     /**

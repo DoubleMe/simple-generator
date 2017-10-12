@@ -190,21 +190,25 @@ public class ConfigurationParser {
      */
     protected void parseSqlMapGenerator(Context context, Node node) {
 
-        SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
+        SqlMapGeneratorConfiguration smc = new SqlMapGeneratorConfiguration();
 
-        context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
+        context.setSqlMapGeneratorConfiguration(smc);
 
         Properties attributes = parseAttributes(node);
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
 
-        sqlMapGeneratorConfiguration.setTargetPackage(targetPackage);
-        sqlMapGeneratorConfiguration.setTargetProject(targetProject);
+        smc.setTargetPackage(targetPackage);
+        smc.setTargetProject(targetProject);
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
-            parseProperty(sqlMapGeneratorConfiguration, childNode);
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(smc, childNode);
+            } else if ("columnRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseColumnRenamingRule(smc, childNode);
+            }
 
         }
     }
@@ -325,21 +329,25 @@ public class ConfigurationParser {
      */
     protected void parseJavaModelGenerator(Context context, Node node) {
 
-        JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
+        JavaModelGeneratorConfiguration jmc = new JavaModelGeneratorConfiguration();
 
-        context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
+        context.setJavaModelGeneratorConfiguration(jmc);
 
         Properties attributes = parseAttributes(node);
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
 
-        javaModelGeneratorConfiguration.setTargetPackage(targetPackage);
-        javaModelGeneratorConfiguration.setTargetProject(targetProject);
+        jmc.setTargetPackage(targetPackage);
+        jmc.setTargetProject(targetProject);
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
-            parseProperty(javaModelGeneratorConfiguration, childNode);
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(jmc, childNode);
+            } else if ("columnRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseColumnRenamingRule(jmc, childNode);
+            }
         }
     }
 
@@ -351,22 +359,26 @@ public class ConfigurationParser {
      */
     private void parseJavaClientGenerator(Context context, Node node) {
 
-        JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
+        JavaClientGeneratorConfiguration jcc = new JavaClientGeneratorConfiguration();
 
-        context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
+        context.setJavaClientGeneratorConfiguration(jcc);
 
         Properties attributes = parseAttributes(node);
         String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
         String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
 
 
-        javaClientGeneratorConfiguration.setTargetPackage(targetPackage);
-        javaClientGeneratorConfiguration.setTargetProject(targetProject);
+        jcc.setTargetPackage(targetPackage);
+        jcc.setTargetProject(targetProject);
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node childNode = nodeList.item(i);
-            parseProperty(javaClientGeneratorConfiguration, childNode);
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(jcc, childNode);
+            } else if ("columnRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseColumnRenamingRule(jcc, childNode);
+            }
         }
     }
 
@@ -472,11 +484,13 @@ public class ConfigurationParser {
         tc.addIgnoreColumns(ic);
     }
 
-    private void parseDomainObjectRenamingRule(TableConfiguration tc, Node node) {
+    private void parseDomainObjectRenamingRule(PropertyHolder tc, Node node) {
 
         Properties attributes = parseAttributes(node);
         String searchString = attributes.getProperty("searchString"); //$NON-NLS-1$
         String replaceString = attributes.getProperty("replaceString"); //$NON-NLS-1$
+        String prefix = attributes.getProperty("prefix"); //$NON-NLS-1$
+        String suffix = attributes.getProperty("suffix"); //$NON-NLS-1$
 
         RenamingRule dorr = new RenamingRule();
 
@@ -484,12 +498,18 @@ public class ConfigurationParser {
 
         if (stringHasValue(replaceString)) {
             dorr.setReplaceString(replaceString);
+        }
+        if (stringHasValue(prefix)) {
+            dorr.setPrefix(prefix);
+        }
+        if (stringHasValue(suffix)) {
+            dorr.setSuffix(suffix);
         }
 
         tc.setDomainObjectRenamingRule(dorr);
     }
 
-    private void parseColumnRenamingRule(TableConfiguration tc, Node node) {
+    private void parseColumnRenamingRule(PropertyHolder holder, Node node) {
 
         Properties attributes = parseAttributes(node);
         String searchString = attributes.getProperty("searchString"); //$NON-NLS-1$
@@ -503,7 +523,7 @@ public class ConfigurationParser {
             dorr.setReplaceString(replaceString);
         }
 
-        tc.setColumnRenamingRule(dorr);
+        holder.setColumnRenamingRule(dorr);
     }
 
 

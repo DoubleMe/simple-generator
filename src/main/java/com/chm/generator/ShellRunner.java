@@ -28,26 +28,22 @@ public class ShellRunner {
 
     private static final String PROJECT_PATH = "-project"; //$NON-NLS-1$
 
-    private static final String DEFAULT_CONFIG_FILE = "/config/config.xml"; //$NON-NLS-1$
-
     public static void main(String[] args) throws Exception {
-
-//        String configFile = "/config/config.xml";
 
         Map<String, String> map = parseCommandLine(args);
 
         String configFile = map.get(CONFIG_FILE);
         if (configFile == null){
-            writeLine("configFile is null");
+            writeLine("error :configFile is null");
             System.exit(0);
         }
         String projectPath = map.get(PROJECT_PATH);
         if (projectPath == null){
-            writeLine("info : projectPath is null");
+            writeLine("warning : projectPath is null");
         }
         File configurationFile = new File(configFile);
         if (!configurationFile.exists()){
-            writeLine("configFile is not exists");
+            writeLine("error : configFile is not exists");
             System.exit(0);
         }
 
@@ -63,10 +59,16 @@ public class ShellRunner {
                 context.resetProjectPath(projectPath);
             }
             DBConfigAdapter dbConfigAdapter = new DBConfigAdapter(context);
-            GeneratorConfigHolder configHolder = dbConfigAdapter.getGenerator();
+            GeneratorConfigHolder configHolder = dbConfigAdapter.getGeneratorConfigHolder();
             GeneratorExecutor.execute(configHolder);
 
         }
+
+        writeLine("+---------------------------------------------------+");
+        writeLine("|                                                   |");
+        writeLine("| B U I L D I N G SUCCESSFUL                         ");
+        writeLine("|                                                   |");
+        writeLine("+---------------------------------------------------+");
     }
 
     private static Map<String, String> parseCommandLine(String[] args) {

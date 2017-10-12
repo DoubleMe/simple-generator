@@ -42,7 +42,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
         List<IntrospectedTable> introspectedTables = super.getIntrospectedTable();
         if (!introspectedTables.isEmpty()) {
             for (IntrospectedTable introspectedTable : introspectedTables) {
-                String namespace = javaClient.getTargetPackage() + "." + getMapperName(introspectedTable);
+                String namespace = javaClient.getTargetPackage() + "." + getMapperName(introspectedTable, javaClient.getDomainObjectRenamingRule());
                 Mapper mapper = new Mapper(namespace);
 
                 mapper.setRemark(introspectedTable.getTable().getRemark());
@@ -51,23 +51,23 @@ public class SqlMapperGenerator extends AbstractGenerator {
                 if (introspectedTable.getConfiguration().isInsertEnabled()) {
                     mapper.addElement(createInsert(introspectedTable));
                 }
-                if (introspectedTable.getConfiguration().isGetByIdEnabled()){
+                if (introspectedTable.getConfiguration().isGetByIdEnabled()) {
 
                     mapper.addElement(createGetById(introspectedTable));
                 }
                 if (introspectedTable.getConfiguration().isListEnabled()) {
                     mapper.addElement(createList(introspectedTable));
                 }
-                if (introspectedTable.getConfiguration().isUpdateEnabled()){
+                if (introspectedTable.getConfiguration().isUpdateEnabled()) {
                     mapper.addElement(createUpdate(introspectedTable));
                 }
-                if (introspectedTable.getConfiguration().isDelByIdEnabled()){
+                if (introspectedTable.getConfiguration().isDelByIdEnabled()) {
                     mapper.addElement(createDelById(introspectedTable));
                 }
 
                 String source = mapperTOString(mapper);
                 File directory = getDirectory(sqlMap.getTargetProject(), sqlMap.getTargetPackage());
-                writeFile(directory, source, getMapperName(introspectedTable));
+                writeFile(directory, source, getMapperName(introspectedTable, javaClient.getDomainObjectRenamingRule()));
             }
         }
 
@@ -199,7 +199,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
         element.setRemark(MethodEnums.INSERT.getRemark());
         element.addParameter("id", MethodEnums.INSERT.getMethodName());
         element.setBody(insert(it));
-        element.addParameter("parameterType", javaClientGeneratorConfiguration.getTargetPackage() + "." + getDomainName(it));
+        element.addParameter("parameterType", javaModelGeneratorConfiguration.getTargetPackage() + "." + getDomainName(it));
         return element;
     }
 

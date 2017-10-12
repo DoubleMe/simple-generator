@@ -115,7 +115,7 @@ public class DBConfigAdapter {
     }
 
 
-    public GeneratorConfigHolder getGenerator() {
+    public GeneratorConfigHolder getGeneratorConfigHolder() {
 
         GeneratorConfigHolder generator = new GeneratorConfigHolder();
 

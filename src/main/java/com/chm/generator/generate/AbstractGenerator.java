@@ -269,11 +269,12 @@ public abstract class AbstractGenerator {
 
         if (domainObjectName == null || "".equals(domainObjectName)) {
             String tableName = table.getTable().getTableName();
-            RenamingRule domainObjectRenamingRule = table.getConfiguration().getDomainObjectRenamingRule();
+            RenamingRule domainObjectRenamingRule = javaModelGeneratorConfiguration.getDomainObjectRenamingRule();
             if (domainObjectRenamingRule != null) {
-                tableName = domainObjectRenamingRule.rename(tableName);
+                domainObjectName = domainObjectRenamingRule.rename(tableName, true);
+            } else {
+                domainObjectName = JavaBeansUtil.getCamelCaseString(tableName, true);
             }
-            domainObjectName = JavaBeansUtil.getCamelCaseString(tableName, true);
         }
 
 
@@ -281,20 +282,24 @@ public abstract class AbstractGenerator {
     }
 
     /**
-     * get domain name
+     * get mapper name
      *
      * @return
      */
-    protected String getMapperName(IntrospectedTable table) {
+    protected String getMapperName(IntrospectedTable table, RenamingRule rule) {
 
         String mapperName = table.getConfiguration().getMapperName();
-
-        if (mapperName == null || "".equals(mapperName)) {
-            String tableName = table.getTable().getTableName();
-            mapperName = JavaBeansUtil.getCamelCaseString(tableName, true) + "Mapper";
-
+        String tableName = table.getTable().getTableName();
+        if (rule == null) {
+            if (mapperName == null || "".equals(mapperName)) {
+                mapperName = JavaBeansUtil.getCamelCaseString(tableName, true) + "Mapper";
+            }
+        } else {
+            mapperName = rule.rename(tableName, false);
         }
+
         return mapperName;
+
     }
 
     /**
@@ -309,9 +314,7 @@ public abstract class AbstractGenerator {
         //        if (domainObjectRenamingRule != null){
         //            columnName = domainObjectRenamingRule.rename(columnName);
         //        }
-        if (JavaKeyHolder.containKey(columnName)) {
-            System.out.println("warning : the column name " + columnName + " is a java reserved word");
-        }
+
 
         return JavaBeansUtil.getCamelCaseString(columnName, false);
     }

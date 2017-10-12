@@ -19,21 +19,26 @@ package com.chm.generator.configuration.config;
 import com.chm.generator.configuration.config.xml.Attribute;
 import com.chm.generator.configuration.config.xml.XmlElement;
 import com.chm.generator.message.MessageSource;
+import com.chm.generator.utils.JavaBeansUtil;
 import com.chm.generator.utils.StringUtility;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
- *
  * @author chen-hongmin
- *
  */
 public class RenamingRule {
 
     private String searchString;
 
     private String replaceString;
+
+    private String prefix;
+
+    private String suffix;
 
     public String getReplaceString() {
 
@@ -62,6 +67,22 @@ public class RenamingRule {
         }
     }
 
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
+    }
+
     public XmlElement toXmlElement() {
 
         XmlElement xmlElement = new XmlElement("domainRenamingRule"); //$NON-NLS-1$
@@ -74,16 +95,47 @@ public class RenamingRule {
         return xmlElement;
     }
 
-    public String rename(String sourceName){
+    public String rename(String sourceName) {
 
-        if (searchString == null || "".equals(searchString)){
+        if (searchString == null || "".equals(searchString)) {
             return sourceName;
         }
-        if (replaceString == null){
+        if (replaceString == null) {
             replaceString = "";
         }
-        sourceName = sourceName.replace(searchString,replaceString);
 
-        return sourceName;
+        Pattern pattern = Pattern.compile(searchString);
+        Matcher matcher = pattern.matcher(sourceName);
+        String result = matcher.replaceAll(replaceString);
+
+        if (prefix != null) {
+            result = prefix + result;
+        }
+        if (suffix != null) {
+            result = result + suffix;
+        }
+        return result;
+    }
+
+    public String rename(String sourceName, boolean firstCharacterUppercase) {
+
+        if (searchString == null || "".equals(searchString)) {
+            return sourceName;
+        }
+        if (replaceString == null) {
+            replaceString = "";
+        }
+
+        Pattern pattern = Pattern.compile(searchString);
+        Matcher matcher = pattern.matcher(sourceName);
+        String result = matcher.replaceAll(replaceString);
+        result = JavaBeansUtil.getCamelCaseString(result, firstCharacterUppercase);
+        if (prefix != null) {
+            result = prefix + result;
+        }
+        if (suffix != null) {
+            result = result + suffix;
+        }
+        return result;
     }
 }

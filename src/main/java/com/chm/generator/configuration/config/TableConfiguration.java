@@ -62,9 +62,7 @@ public class TableConfiguration extends PropertyHolder {
 
     private List<Column> ignoreColumns = new ArrayList<>();
 
-    private RenamingRule domainObjectRenamingRule;
 
-    private RenamingRule columnRenamingRule;
 
 
     public boolean isInsertEnabled() {
@@ -242,23 +240,6 @@ public class TableConfiguration extends PropertyHolder {
         this.ignoreColumns = ignoreColumns;
     }
 
-    public RenamingRule getDomainObjectRenamingRule() {
 
-        return domainObjectRenamingRule;
-    }
 
-    public void setDomainObjectRenamingRule(RenamingRule domainObjectRenamingRule) {
-
-        this.domainObjectRenamingRule = domainObjectRenamingRule;
-    }
-
-    public RenamingRule getColumnRenamingRule() {
-
-        return columnRenamingRule;
-    }
-
-    public void setColumnRenamingRule(RenamingRule columnRenamingRule) {
-
-        this.columnRenamingRule = columnRenamingRule;
-    }
 }

@@ -36,7 +36,7 @@ public class ShellRunnerCopy {
         for (Context context : contexts) {
 
             DBConfigAdapter dbConfigAdapter = new DBConfigAdapter(context);
-            GeneratorConfigHolder configHolder = dbConfigAdapter.getGenerator();
+            GeneratorConfigHolder configHolder = dbConfigAdapter.getGeneratorConfigHolder();
             GeneratorExecutor.execute(configHolder);
 
         }
