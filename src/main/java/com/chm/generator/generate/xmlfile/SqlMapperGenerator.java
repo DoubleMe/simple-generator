@@ -374,7 +374,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
             sb.append("<if test=").append("\"").append(getColumnName(col.getColumnName())).append(" != null").append("\"").append(">");
             newLine(sb);
             newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
-            sb.append(col.getColumnName()).append(" = #{").append(getColumnName(col.getColumnName())).append("}");
+            sb.append(col.getColumnName()).append(" = #{").append(getColumnName(col.getColumnName())).append("}").append(",");
             newLine(sb);
             newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
             sb.append("</if>");
