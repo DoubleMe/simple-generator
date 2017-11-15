@@ -206,8 +206,8 @@ public class ConfigurationParser {
             Node childNode = nodeList.item(i);
             if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseProperty(smc, childNode);
-            } else if ("columnRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
-                parseColumnRenamingRule(smc, childNode);
+            } else if ("domainObjectRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseDomainObjectRenamingRule(smc, childNode);
             }
 
         }
@@ -345,8 +345,8 @@ public class ConfigurationParser {
             Node childNode = nodeList.item(i);
             if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseProperty(jmc, childNode);
-            } else if ("columnRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
-                parseColumnRenamingRule(jmc, childNode);
+            } else if ("domainObjectRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseDomainObjectRenamingRule(jmc, childNode);
             }
         }
     }
@@ -376,8 +376,8 @@ public class ConfigurationParser {
             Node childNode = nodeList.item(i);
             if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseProperty(jcc, childNode);
-            } else if ("columnRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
-                parseColumnRenamingRule(jcc, childNode);
+            } else if ("domainObjectRenamingRule".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseDomainObjectRenamingRule(jcc, childNode);
             }
         }
     }

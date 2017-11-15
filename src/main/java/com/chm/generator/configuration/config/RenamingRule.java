@@ -16,8 +16,6 @@
 package com.chm.generator.configuration.config;
 
 
-import com.chm.generator.configuration.config.xml.Attribute;
-import com.chm.generator.configuration.config.xml.XmlElement;
 import com.chm.generator.message.MessageSource;
 import com.chm.generator.utils.JavaBeansUtil;
 import com.chm.generator.utils.StringUtility;
@@ -83,17 +81,7 @@ public class RenamingRule {
         this.suffix = suffix;
     }
 
-    public XmlElement toXmlElement() {
 
-        XmlElement xmlElement = new XmlElement("domainRenamingRule"); //$NON-NLS-1$
-        xmlElement.addAttribute(new Attribute("searchString", searchString)); //$NON-NLS-1$
-
-        if (replaceString != null) {
-            xmlElement.addAttribute(new Attribute("replaceString", replaceString)); //$NON-NLS-1$
-        }
-
-        return xmlElement;
-    }
 
     public String rename(String sourceName) {
 

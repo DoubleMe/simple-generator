@@ -1,6 +1,5 @@
 package com.chm.generator.generate.xmlfile.dataobject;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

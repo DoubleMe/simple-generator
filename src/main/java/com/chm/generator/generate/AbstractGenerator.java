@@ -295,7 +295,7 @@ public abstract class AbstractGenerator {
                 mapperName = JavaBeansUtil.getCamelCaseString(tableName, true) + "Mapper";
             }
         } else {
-            mapperName = rule.rename(tableName, false);
+            mapperName = rule.rename(tableName, true);
         }
 
         return mapperName;

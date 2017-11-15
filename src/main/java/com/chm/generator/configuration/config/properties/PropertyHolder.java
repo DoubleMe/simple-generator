@@ -16,10 +16,7 @@
 package com.chm.generator.configuration.config.properties;
 
 import com.chm.generator.configuration.config.RenamingRule;
-import com.chm.generator.configuration.config.xml.Attribute;
-import com.chm.generator.configuration.config.xml.XmlElement;
 
-import java.util.Enumeration;
 import java.util.Properties;
 
 /**
@@ -72,20 +69,5 @@ public abstract class PropertyHolder {
         this.columnRenamingRule = columnRenamingRule;
     }
 
-    /**
-     *
-     * @param xmlElement
-     */
-    protected void addPropertyXmlElements(XmlElement xmlElement) {
 
-        Enumeration<?> enumeration = properties.propertyNames();
-        while (enumeration.hasMoreElements()) {
-            String propertyName = (String) enumeration.nextElement();
-
-            XmlElement propertyElement = new XmlElement("property"); //$NON-NLS-1$
-            propertyElement.addAttribute(new Attribute("name", propertyName)); //$NON-NLS-1$
-            propertyElement.addAttribute(new Attribute("value", properties.getProperty(propertyName))); //$NON-NLS-1$
-            xmlElement.addElement(propertyElement);
-        }
-    }
 }

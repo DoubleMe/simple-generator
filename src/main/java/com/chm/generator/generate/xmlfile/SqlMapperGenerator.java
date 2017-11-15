@@ -204,7 +204,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
     }
 
     /**
-     * 创建sql_insert
+     * 创建sql_getById
      *
      * @param it
      * @return
