@@ -1,5 +1,6 @@
 package com.chm.generator.message;
 
+import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -11,7 +12,7 @@ import java.util.ResourceBundle;
  */
 public class MessageSource {
 
-    private static final String BUNDLE_NAME = "internal.message"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "internal.message";
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
@@ -27,9 +28,13 @@ public class MessageSource {
     public static String getMessage(String key) {
 
         try {
-
-            return RESOURCE_BUNDLE.getString(key);
+            String message = new String(RESOURCE_BUNDLE.getString(key).getBytes("ISO-8859-1"), "UTF-8");
+            return message;
         } catch (MissingResourceException e) {
+            e.printStackTrace();
+            return key;
+        }catch (UnsupportedEncodingException e){
+            e.printStackTrace();
             return key;
         }
     }
@@ -43,16 +48,15 @@ public class MessageSource {
     public static String getMessage(String key, String... param) {
 
         try {
-            return MessageFormat.format(RESOURCE_BUNDLE.getString(key), new Object[]{param});
+            String message = new String(RESOURCE_BUNDLE.getString(key).getBytes("ISO-8859-1"), "UTF-8");
+            return MessageFormat.format(message, param);
         } catch (MissingResourceException e) {
+            e.printStackTrace();
+            return key;
+        }catch (UnsupportedEncodingException e){
+            e.printStackTrace();
             return key;
         }
-    }
-
-    public static void main(String[] args) {
-
-        System.out.println(getMessage("ValidationError.2","sadasdas","ssss"));
-
     }
 
 }
