@@ -62,9 +62,6 @@ public class TableConfiguration extends PropertyHolder {
 
     private List<Column> ignoreColumns = new ArrayList<>();
 
-
-
-
     public boolean isInsertEnabled() {
 
         return insertEnabled;

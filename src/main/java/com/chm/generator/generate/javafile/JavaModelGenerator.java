@@ -105,6 +105,7 @@ public class JavaModelGenerator extends AbstractJavaGenerator {
         sb.append("return this.").append(columnName).append(";");
         newLine(sb);
         methodModel.addBodyLine(sb.toString());
+        methodModel.setFiledMethod(true);
 
         return methodModel;
     }
@@ -133,6 +134,7 @@ public class JavaModelGenerator extends AbstractJavaGenerator {
 
         Parameter parameter = new Parameter(jdbcType, simpleType, columnName);
         methodModel.addParameter(parameter);
+        methodModel.setFiledMethod(true);
         return methodModel;
     }
 

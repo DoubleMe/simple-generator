@@ -67,20 +67,20 @@ public class ClassLoaderHolder {
 
     public static ClassLoader getCustomClassloader(String classPathEntry) {
 
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         File file;
 
 
         file = new File(classPathEntry);
         if (!file.exists()) {
-            throw new RuntimeException(MessageSource.getMessage("RuntimeError.9", classPathEntry)); //$NON-NLS-1$
+            throw new RuntimeException(MessageSource.getMessage("RuntimeError.9", classPathEntry));
         }
 
         try {
             urls.add(file.toURI().toURL());
         } catch (MalformedURLException e) {
             // this shouldn't happen, but just in case...
-            throw new RuntimeException(MessageSource.getMessage("RuntimeError.9", classPathEntry)); //$NON-NLS-1$
+            throw new RuntimeException(MessageSource.getMessage("RuntimeError.9", classPathEntry));
         }
 
 

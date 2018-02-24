@@ -39,6 +39,11 @@ public class MethodModel {
      */
     private String remark;
 
+    /**
+     * 是否是字段的get set 方法
+     */
+    private boolean filedMethod;
+
     public MethodModel(){
         bodyLines = new ArrayList<>();
         parameters = new ArrayList<>();
@@ -131,5 +136,13 @@ public class MethodModel {
     public void setRemark(String remark) {
 
         this.remark = remark;
+    }
+
+    public boolean isFiledMethod() {
+        return filedMethod;
+    }
+
+    public void setFiledMethod(boolean filedMethod) {
+        this.filedMethod = filedMethod;
     }
 }

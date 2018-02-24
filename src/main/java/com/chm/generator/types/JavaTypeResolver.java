@@ -49,7 +49,7 @@ public class JavaTypeResolver {
         typeMap.put(Types.INTEGER, Integer.class.getName());
         typeMap.put(Types.JAVA_OBJECT, Object.class.getName());
         typeMap.put(Types.LONGNVARCHAR, String.class.getName());
-        typeMap.put(Types.LONGVARBINARY, "byte[]"); //$NON-NLS-1$
+        typeMap.put(Types.LONGVARBINARY, "byte[]");
         typeMap.put(Types.LONGVARCHAR, String.class.getName());
         typeMap.put(Types.NCHAR, String.class.getName());
         typeMap.put(Types.NCLOB, String.class.getName());
@@ -64,7 +64,7 @@ public class JavaTypeResolver {
         typeMap.put(Types.TIME, Date.class.getName());
         typeMap.put(Types.TIMESTAMP, Date.class.getName());
         typeMap.put(Types.TINYINT, Byte.class.getName());
-        typeMap.put(Types.VARBINARY,"byte[]"); //$NON-NLS-1$
+        typeMap.put(Types.VARBINARY,"byte[]");
         typeMap.put(Types.VARCHAR, String.class.getName());
     }
 

@@ -61,7 +61,7 @@ public class RenamingRule {
     public void validate(List<String> errors, String tableName) {
 
         if (!StringUtility.stringHasValue(searchString)) {
-            errors.add(MessageSource.getMessage("ValidationError.28", tableName)); //$NON-NLS-1$
+            errors.add(MessageSource.getMessage("ValidationError.28", tableName));
         }
     }
 

@@ -31,6 +31,11 @@ public class ReturnType {
      */
     private boolean isGeneric;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
     public ReturnType(String javaType, String simpleType) {
 
         this.javaType = javaType;
@@ -85,5 +90,13 @@ public class ReturnType {
     public void setGenericSimpleType(String genericSimpleType) {
 
         this.genericSimpleType = genericSimpleType;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

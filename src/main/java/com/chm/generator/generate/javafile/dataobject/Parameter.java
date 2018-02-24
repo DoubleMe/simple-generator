@@ -32,6 +32,11 @@ public class Parameter {
      */
     private String name;
 
+    /**
+     * 参数备注
+     */
+    private String remark;
+
     public Parameter(String javaType,String simpleType, String name) {
 
         this.javaType = javaType;
@@ -87,5 +92,13 @@ public class Parameter {
     public void setGeneric(boolean generic) {
 
         isGeneric = generic;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

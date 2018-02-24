@@ -10,13 +10,20 @@ import java.util.List;
  */
 public class Mapper {
 
-    //mapper namespace
+    /**
+     * mapper namespace
+     */
+
     private String namespace;
 
-    //别名
+    /**
+     * 别名
+     */
     private String alias;
 
-    //注释
+    /**
+     * 注释
+     */
     private String remark;
 
     private List<MapperElement> elements;

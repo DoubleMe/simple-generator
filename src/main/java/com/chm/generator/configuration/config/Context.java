@@ -42,9 +42,9 @@ public class Context extends PropertyHolder {
 
     private ArrayList<TableConfiguration> tableConfigurations;
 
-    private String beginningDelimiter = "\""; //$NON-NLS-1$
+    private String beginningDelimiter = "\"";
 
-    private String endingDelimiter = "\""; //$NON-NLS-1$
+    private String endingDelimiter = "\"";
 
 
     public Context() {

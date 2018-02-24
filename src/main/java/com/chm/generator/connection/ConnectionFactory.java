@@ -26,7 +26,6 @@ public class ConnectionFactory {
      *
      * @param configuration
      * @return
-     * @throws SQLException
      */
     public static Connection getConnection(JDBCConnectionConfiguration configuration) {
 
@@ -34,11 +33,11 @@ public class ConnectionFactory {
             Properties props = new Properties();
 
             if (stringHasValue(configuration.getUserId())) {
-                props.setProperty("user", configuration.getUserId()); //$NON-NLS-1$
+                props.setProperty("user", configuration.getUserId());
             }
 
             if (stringHasValue(configuration.getPassword())) {
-                props.setProperty("password", configuration.getPassword()); //$NON-NLS-1$
+                props.setProperty("password", configuration.getPassword());
             }
 
             props.putAll(configuration.getProperties());

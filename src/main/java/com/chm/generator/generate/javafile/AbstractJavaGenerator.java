@@ -6,6 +6,8 @@ import com.chm.generator.generate.GeneratorConfigHolder;
 import com.chm.generator.generate.javafile.dataobject.*;
 import com.chm.generator.generate.enums.FileType;
 import com.chm.generator.generate.enums.JavaVisibility;
+import com.chm.generator.utils.StringUtility;
+import com.chm.generator.utils.SystemProp;
 
 import java.util.Iterator;
 import java.util.List;
@@ -23,12 +25,14 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
         super(configHolder);
         super.fileType = FileType.JAVA;
     }
+
     /**
      * classModel 对象转成 String
+     *
      * @param classModel
      * @return
      */
-    public String classModelTOString(ClassModel classModel){
+    public String classModelTOString(ClassModel classModel) {
 
         StringBuilder sb = new StringBuilder();
         //package
@@ -36,9 +40,9 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
         newLine(sb);
         //import
         Map<String, Object> importMap = classModel.getImportMap();
-        if (!importMap.isEmpty()){
-            for (String key : importMap.keySet()){
-                if (key.indexOf("java.lang") == -1 && key.indexOf(classModel.getPackageName()) == -1){
+        if (!importMap.isEmpty()) {
+            for (String key : importMap.keySet()) {
+                if (key.indexOf("java.lang") == -1 && key.indexOf(classModel.getPackageName()) == -1) {
                     sb.append(IMPORT).append(key).append(";");
                     newLine(sb);
                 }
@@ -46,25 +50,25 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
         }
         newLine(sb);
         //备注
-        sb.append(remarks(classModel.getRemarks(),LevelConstants.LEVEL_CLASS));
+        sb.append(classRemarks(classModel.getRemarks(), LevelConstants.LEVEL_CLASS));
         //class header
         sb.append(JavaVisibility.PUBLIC.getValue()).append(classModel.getClassType().getValue()).append(classModel.getClassName());
         sb.append(SPACE).append(LEFT_BRACKETS);
         newLine(sb);
         //字段
         List<FieldModel> fieldModels = classModel.getFieldModels();
-        if (!fieldModels.isEmpty()){
-            for (FieldModel fieldModel : fieldModels){
-                sb.append(remarks(fieldModel.getRemark(),LevelConstants.LEVEL_FIELD));
-                newTab(sb,LevelConstants.LEVEL_FIELD);
+        if (!fieldModels.isEmpty()) {
+            for (FieldModel fieldModel : fieldModels) {
+                sb.append(remarks(fieldModel.getRemark(), LevelConstants.LEVEL_FIELD));
+                newTab(sb, LevelConstants.LEVEL_FIELD);
                 sb.append(JavaVisibility.PRIVATE.getValue()).append(fieldModel.getSimpleType()).append(SPACE).append(fieldModel.getFieldName()).append(";");
-                newLine(sb,LevelConstants.LEVEL_BODY);
+                newLine(sb, LevelConstants.LEVEL_BODY);
             }
         }
 //        newLine(sb);
         List<MethodModel> methodModels = classModel.getMethodModels();
-        if (!methodModels.isEmpty()){
-            for (MethodModel methodModel : methodModels){
+        if (!methodModels.isEmpty()) {
+            for (MethodModel methodModel : methodModels) {
                 sb.append(methodTOString(methodModel));
             }
         }
@@ -85,24 +89,114 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
     }
 
     /**
-     * 备注
+     * 字段上的注释
      *
      * @return
      */
-    protected String remarks(String remark , int level) {
+    protected String remarks(String remark, int level) {
 
         StringBuilder sb = new StringBuilder();
-        if (remark == null || "".equals(remark)){
+        if (remark == null || "".equals(remark)) {
             newLine(sb);
             return sb.toString();
         }
-        newTab(sb,level);
+        newTab(sb, level);
         sb.append("/**");
         newLine(sb);
-        newTab(sb,level);
+        newTab(sb, level);
         sb.append(SPACE).append("*").append(SPACE).append(remark);
         newLine(sb);
-        newTab(sb,level);
+        newTab(sb, level);
+        sb.append(SPACE).append("*/");
+        newLine(sb);
+        return sb.toString();
+    }
+    /**
+     * 字段上的注释
+     *
+     * @return
+     */
+    protected String classRemarks(String remark, int level) {
+
+        StringBuilder sb = new StringBuilder();
+        newTab(sb, level);
+        sb.append("/**");
+
+        newLine(sb);
+        newTab(sb, level);
+        sb.append(SPACE).append("*").append(SPACE).append(remark);
+
+        newLine(sb);
+        newTab(sb, level);
+        sb.append(SPACE).append("*");
+
+        newLine(sb);
+        newTab(sb, level);
+        sb.append(SPACE).append("*").append(SPACE).append("@author ").append(SystemProp.user);
+
+        newLine(sb);
+        newTab(sb, level);
+        sb.append(SPACE).append("*").append(SPACE).append("@date ").append(SystemProp.getSystemDate());
+
+        newLine(sb);
+        newTab(sb, level);
+        sb.append(SPACE).append("*").append(SPACE).append("@since V1.0");
+
+
+        newLine(sb);
+        newTab(sb, level);
+        sb.append(SPACE).append("*/");
+        newLine(sb);
+        return sb.toString();
+    }
+
+    /**
+     * 方法上的注释
+     *
+     * @return
+     */
+    protected String methodRemarks(MethodModel methodModel, int level) {
+
+        StringBuilder sb = new StringBuilder();
+        String remark = methodModel.getRemark();
+        if (methodModel.isFiledMethod()){
+            newLine(sb);
+            return sb.toString();
+        }
+
+        newTab(sb, level);
+        sb.append("/**");
+        newLine(sb);
+        newTab(sb, level);
+        sb.append(SPACE).append("*").append(SPACE).append(StringUtility.getStrOfNull(remark));
+        newLine(sb);
+        newTab(sb, level);
+        sb.append(SPACE).append("*");
+        //添加参数的注释
+        List<Parameter> parameters = methodModel.getParameters();
+        if (parameters != null && !parameters.isEmpty()) {
+            for (Parameter parameter : parameters) {
+                newLine(sb);
+                newTab(sb, level);
+                sb.append(SPACE).append("*").append(SPACE).append("@param ")
+                        .append(parameter.getName()).append(SPACE).append(StringUtility.getStrOfNull(parameter.getRemark()));
+            }
+        }
+
+        ReturnType returnType = methodModel.getReturnType();
+        if (returnType != null) {
+            newLine(sb);
+            newTab(sb, level);
+            sb.append(SPACE).append("*").append(SPACE).append("@return ");
+            sb.append(returnType.getSimpleType());
+            if (returnType.isGeneric()) {
+                sb.append("<").append(returnType.getGenericSimpleType()).append(">");
+            }
+            sb.append(SPACE).append(StringUtility.getStrOfNull(returnType.getRemark()));
+        }
+
+        newLine(sb);
+        newTab(sb, level);
         sb.append(SPACE).append("*/");
         newLine(sb);
         return sb.toString();
@@ -110,37 +204,38 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
 
     /**
      * methodModel 转成String
+     *
      * @param methodModel
      * @return
      */
-    public String methodTOString(MethodModel methodModel){
+    public String methodTOString(MethodModel methodModel) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(remarks(methodModel.getRemark(),LevelConstants.LEVEL_METHOD));
+        sb.append(methodRemarks(methodModel, LevelConstants.LEVEL_METHOD));
         newTab(sb, LevelConstants.LEVEL_METHOD);
-        if (methodModel.getVisibility() != null){
+        if (methodModel.getVisibility() != null) {
             sb.append(methodModel.getVisibility());
         }
         ReturnType returnType = methodModel.getReturnType();
-        if (returnType == null){
+        if (returnType == null) {
             sb.append("void");
-        }else {
+        } else {
             //泛型
             sb.append(returnType.getSimpleType());
-            if (returnType.isGeneric()){
+            if (returnType.isGeneric()) {
                 sb.append("<").append(returnType.getGenericSimpleType()).append(">");
             }
         }
         sb.append(SPACE).append(methodModel.getMethodName()).append("(");
         //拼接参数
-        if (!methodModel.getParameters().isEmpty()){
+        if (!methodModel.getParameters().isEmpty()) {
             Iterator<Parameter> iterator = methodModel.getParameters().iterator();
             boolean isFirst = true;
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 Parameter parameter = iterator.next();
-                if (isFirst){
+                if (isFirst) {
                     isFirst = false;
-                }else {
+                } else {
                     sb.append(";");
                 }
                 sb.append(parameter.getSimpleType()).append(SPACE).append(parameter.getName());
@@ -150,16 +245,16 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
 
         sb.append(")");
         //接口或者抽象类
-        if (methodModel.isInterface()){
+        if (methodModel.isInterface()) {
             sb.append(";");
-            newLine(sb ,LevelConstants.LEVEL_BODY);
+            newLine(sb, LevelConstants.LEVEL_BODY);
             return sb.toString();
         }
 
         sb.append(SPACE).append(LEFT_BRACKETS);
         newLine(sb);
 
-        for(String bodyLine : methodModel.getBodyLines()){
+        for (String bodyLine : methodModel.getBodyLines()) {
             sb.append(bodyLine);
         }
         newTab(sb, LevelConstants.LEVEL_METHOD);

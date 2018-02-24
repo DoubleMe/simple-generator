@@ -24,9 +24,9 @@ import java.util.Map;
  */
 public class ShellRunner {
 
-    private static final String CONFIG_FILE = "-configfile"; //$NON-NLS-1$
+    private static final String CONFIG_FILE = "-configfile";
 
-    private static final String PROJECT_PATH = "-project"; //$NON-NLS-1$
+    private static final String PROJECT_PATH = "-project";
 
     public static void main(String[] args) throws Exception {
 
