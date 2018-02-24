@@ -24,8 +24,6 @@ import java.util.GregorianCalendar;
  */
 public class DateUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
-
 
     public static final String DATE_FORMAT_YMDHMS = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT_YMDHM = "yyyy-MM-dd HH:mm";
@@ -43,7 +41,7 @@ public class DateUtils {
         try {
             return new SimpleDateFormat(format).parse(dateStr);
         } catch (ParseException e) {
-           logger.error("日期格式转换失败 ，format={} , dateStr={}",format,dateStr);
+            System.out.println("日期格式转换失败");
         }
         return null;
     }
