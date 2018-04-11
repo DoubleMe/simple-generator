@@ -6,22 +6,22 @@
     <context id="mybatis">
         <!-- 数据库链接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/shopping?characterEncoding=utf8"
-                        userId="root" password="">
+                        connectionURL="jdbc:mysql://10.200.180.56:3306/carfree_account?characterEncoding=utf8"
+                        userId="carfree_dev" password="carfree_dev123">
         </jdbcConnection>
         <!-- model 数据模型 -->
-        <javaModelGenerator targetPackage="dataobject" targetProject="D:\generator\yuhuan-health\src\">
+        <javaModelGenerator targetPackage="dataobject" targetProject="E:\generator\account\src\">
             <domainObjectRenamingRule searchString="t_" replaceString="" suffix="DO"/>
         </javaModelGenerator>
         <!-- sqlMapper -->
-        <sqlMapGenerator targetPackage="com.chm.mybatis.sqlMapper" targetProject="D:\generator\yuhuan-health\src">
+        <sqlMapGenerator targetPackage="com.chm.mybatis.sqlMapper" targetProject="E:\generator\account\src">
             <domainObjectRenamingRule searchString="t_" replaceString="" suffix="Mapper"/>
         </sqlMapGenerator>
         <!-- javaMapper-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.chm.mybatis.mapper" targetProject="D:\generator\yuhuan-health\src">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.chm.mybatis.mapper" targetProject="E:\generator\account\src">
             <domainObjectRenamingRule searchString="t_" replaceString="" suffix="Mapper"/>
         </javaClientGenerator>
-        <table tableName="t_log%">
+        <table tableName="acou%">
         </table>
     </context>
 </generatorConfiguration>

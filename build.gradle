@@ -117,17 +117,17 @@ task javaDoc(type:org.gradle.api.tasks.javadoc.Javadoc){
     exclude '**/impl'
 }
 
-//task mybatisGenerator(){
-//    def jarFile = "E:\\generate\\mybatis-generator-1.0.0.jar"
-//    def configFile = "E:\\generate\\config.xml"
-//    def projectPath = rootDir.getAbsolutePath()
-//    def cmd = "java -jar " + jarFile + " -configfile " + configFile + " -project " + projectPath
-//    println "**********************************************************************"
-//    println "shell: " + cmd
-//    println " "
-//    Process p = cmd.execute()
-//    println "${p.text}"
-//}
+task mybatisGenerator(){
+    def jarFile = "E:\\generate\\simple-generator-1.0.jar"
+    def configFile = "E:\\generate\\generator.xml"
+    def projectPath = rootDir.getAbsolutePath()
+    def cmd = "java -jar " + jarFile + " -configfile " + configFile + " -project " + projectPath
+    println "**********************************************************************"
+    println "shell: " + cmd
+    println " "
+    Process p = cmd.execute()
+    println "${p.text}"
+}
 
 
 

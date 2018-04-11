@@ -107,16 +107,14 @@ public class RenamingRule {
 
     public String rename(String sourceName, boolean firstCharacterUppercase) {
 
-        if (searchString == null || "".equals(searchString)) {
-            return sourceName;
-        }
-        if (replaceString == null) {
-            replaceString = "";
+        String result = sourceName;
+        //如果名称需要正则替换
+        if (searchString != null && searchString.trim().length() == 0&&replaceString != null) {
+            Pattern pattern = Pattern.compile(searchString);
+            Matcher matcher = pattern.matcher(sourceName);
+            result = matcher.replaceAll(replaceString);
         }
 
-        Pattern pattern = Pattern.compile(searchString);
-        Matcher matcher = pattern.matcher(sourceName);
-        String result = matcher.replaceAll(replaceString);
         result = JavaBeansUtil.getCamelCaseString(result, firstCharacterUppercase);
         if (prefix != null) {
             result = prefix + result;

@@ -151,7 +151,7 @@
 -->
 <!ELEMENT domainObjectRenamingRule EMPTY>
 <!ATTLIST domainObjectRenamingRule
-  searchString CDATA #REQUIRED
+  searchString CDATA #IMPLIED
   replaceString CDATA #IMPLIED
   prefix CDATA #IMPLIED
   suffix CDATA #IMPLIED>
