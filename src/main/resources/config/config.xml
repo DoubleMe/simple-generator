@@ -11,15 +11,15 @@
         </jdbcConnection>
         <!-- model 数据模型 -->
         <javaModelGenerator targetPackage="dataobject" targetProject="E:\generator\account\src\">
-            <domainObjectRenamingRule searchString="t_" replaceString="" suffix="DO"/>
+            <domainObjectRenamingRule  suffix="DO"/>
         </javaModelGenerator>
         <!-- sqlMapper -->
         <sqlMapGenerator targetPackage="com.chm.mybatis.sqlMapper" targetProject="E:\generator\account\src">
-            <domainObjectRenamingRule searchString="t_" replaceString="" suffix="Mapper"/>
+            <domainObjectRenamingRule  suffix="Mapper"/>
         </sqlMapGenerator>
         <!-- javaMapper-->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.chm.mybatis.mapper" targetProject="E:\generator\account\src">
-            <domainObjectRenamingRule searchString="t_" replaceString="" suffix="Mapper"/>
+            <domainObjectRenamingRule suffix="Mapper"/>
         </javaClientGenerator>
         <table tableName="acou%">
         </table>

@@ -35,6 +35,8 @@ public class JavaModelGenerator extends AbstractJavaGenerator {
         List<IntrospectedTable> introspectedTables = super.getIntrospectedTable();
         if (!introspectedTables.isEmpty()) {
             for (IntrospectedTable introspectedTable : introspectedTables) {
+
+                System.out.println("mybatis-generator : the table name of " + introspectedTable.getTable().getTableName() + " build successful");
                 ClassModel classModel = new ClassModel();
 
                 String targetPackage = configuration.getTargetPackage();

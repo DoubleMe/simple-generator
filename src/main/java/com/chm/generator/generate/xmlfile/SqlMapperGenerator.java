@@ -283,23 +283,43 @@ public class SqlMapperGenerator extends AbstractGenerator {
         newTab(sb, LevelConstants.LEVEL_XML_BODY);
         sb.append("INSERT INTO ").append(it.getTable().getTableName()).append(" (");
         for (int i = 0; i < model.getColumns().size(); i++) {
+            newLine(sb);
+            newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
             Column col = model.getColumns().get(i);
+            sb.append("<if test=").append("\"").append(getColumnName(col.getColumnName())).append(" != null").append("\"").append(">");
+            newLine(sb);
+            newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
             sb.append(col.getColumnName());
             if (i != model.getColumns().size() - 1) {
                 sb.append(", ");
             }
+            newLine(sb);
+            newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
+            sb.append("</if>");
         }
+        newLine(sb);
+        newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
         sb.append(")");
         newLine(sb);
         newTab(sb, LevelConstants.LEVEL_XML_BODY);
         sb.append("VALUES (");
         for (int i = 0; i < model.getColumns().size(); i++) {
+            newLine(sb);
+            newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
             Column col = model.getColumns().get(i);
+            sb.append("<if test=").append("\"").append(getColumnName(col.getColumnName())).append(" != null").append("\"").append(">");
+            newLine(sb);
+            newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
             sb.append("#{").append(getColumnName(col.getColumnName())).append("}");
             if (i != model.getColumns().size() - 1) {
                 sb.append(", ");
             }
+            newLine(sb);
+            newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
+            sb.append("</if>");
         }
+        newLine(sb);
+        newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
         sb.append(")");
         return sb.toString();
     }
