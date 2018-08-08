@@ -6,22 +6,23 @@
     <context id="mybatis">
         <!-- 数据库链接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://10.200.180.56:3306/carfree_account?characterEncoding=utf8"
-                        userId="carfree_dev" password="carfree_dev123">
+                        connectionURL="jdbc:mysql://localhost:3306/carfree_park?characterEncoding=utf8"
+                        userId="root" password="root">
         </jdbcConnection>
         <!-- model 数据模型 -->
-        <javaModelGenerator targetPackage="dataobject" targetProject="E:\generator\account\src\">
-            <domainObjectRenamingRule  suffix="DO"/>
+        <javaModelGenerator targetPackage="com.carfree.parking.dao.dataobject" targetProject="E:\generate\parking">
+            <domainObjectRenamingRule suffix="DO"/>
         </javaModelGenerator>
         <!-- sqlMapper -->
-        <sqlMapGenerator targetPackage="com.chm.mybatis.sqlMapper" targetProject="E:\generator\account\src">
-            <domainObjectRenamingRule  suffix="Mapper"/>
+        <sqlMapGenerator targetPackage="com.carfree.parking.dao.sqlMapper" targetProject="E:\generate\parking">
+            <domainObjectRenamingRule suffix="Mapper"/>
         </sqlMapGenerator>
         <!-- javaMapper-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.chm.mybatis.mapper" targetProject="E:\generator\account\src">
-            <domainObjectRenamingRule suffix="Mapper"/>
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.carfree.parking.dao" targetProject="E:\generate\parking">
+            <domainObjectRenamingRule suffix="DAO"/>
         </javaClientGenerator>
-        <table tableName="acou%">
+        <!-- 表名,tableName 支持模糊查询 允许配置多个table -->
+        <table tableName="parking%">
         </table>
     </context>
 </generatorConfiguration>

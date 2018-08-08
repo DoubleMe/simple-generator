@@ -34,9 +34,9 @@ public class JavaTypeResolver {
     static {
         typeMap.put(Types.ARRAY, Object.class.getName());
         typeMap.put(Types.BIGINT,Long.class.getName());
-        typeMap.put(Types.BINARY,"byte[]"); //$NON-NLS-1$
+        typeMap.put(Types.BINARY,"byte[]");
         typeMap.put(Types.BIT, Integer.class.getName());
-        typeMap.put(Types.BLOB, "byte[]"); //$NON-NLS-1$
+        typeMap.put(Types.BLOB, "byte[]");
         typeMap.put(Types.BOOLEAN,Boolean.class.getName());
         typeMap.put(Types.CHAR, String.class.getName());
         typeMap.put(Types.CLOB, String.class.getName());
