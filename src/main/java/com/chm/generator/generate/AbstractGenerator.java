@@ -4,6 +4,7 @@ import com.chm.generator.configuration.JavaClientGeneratorConfiguration;
 import com.chm.generator.configuration.JavaModelGeneratorConfiguration;
 import com.chm.generator.configuration.SqlMapGeneratorConfiguration;
 import com.chm.generator.configuration.config.RenamingRule;
+import com.chm.generator.constants.LevelConstants;
 import com.chm.generator.dataobject.IntrospectedTable;
 import com.chm.generator.dataobject.Table;
 import com.chm.generator.generate.enums.FileType;
@@ -196,6 +197,19 @@ public abstract class AbstractGenerator {
     }
 
     /**
+     * 新增一行 和 缩进
+     *
+     * @param sb
+     * @return
+     */
+    protected StringBuilder newLineAndTab(StringBuilder sb) {
+
+        newLine(sb);
+        newTab(sb, LevelConstants.LEVEL_XML_BODY);
+        return sb;
+    }
+
+    /**
      * 输出文件
      * 没有文件夹创建
      * 文件已存在则覆盖
@@ -209,18 +223,27 @@ public abstract class AbstractGenerator {
         String file = fileName + "." + fileType.getValue();
         try {
             File directory = new File(targetFile, file);
-            fos = new FileOutputStream(directory, false);
-            osw = new OutputStreamWriter(fos, fileEncoding);
-            bw = new BufferedWriter(osw);
-            bw.write(source);
-            bw.flush();
+            if (directory.exists()) {
+                System.out.println("the file " + directory.getName() + " is exists");
+            } else {
+                fos = new FileOutputStream(directory, false);
+                osw = new OutputStreamWriter(fos, fileEncoding);
+                bw = new BufferedWriter(osw);
+                bw.write(source);
+                bw.flush();
+            }
+
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
             try {
-                fos.close();
-                osw.close();
+                if (fos != null){
+                    fos.close();
+                }
+                if (osw != null){
+                    osw.close();
+                }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

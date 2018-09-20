@@ -11,12 +11,16 @@ import com.chm.generator.dataobject.Table;
 import com.chm.generator.generate.AbstractGenerator;
 import com.chm.generator.generate.GeneratorConfigHolder;
 import com.chm.generator.generate.enums.FileType;
+import com.chm.generator.generate.enums.IgnoreColumn;
 import com.chm.generator.generate.enums.MethodEnums;
 import com.chm.generator.generate.xmlfile.dataobject.Mapper;
 import com.chm.generator.generate.xmlfile.dataobject.MapperElement;
+import com.chm.generator.types.JavaTypeResolver;
+import com.chm.generator.utils.ColumnUtil;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +43,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
 
         SqlMapGeneratorConfiguration sqlMap = super.getSqlMapGeneratorConfiguration();
         JavaClientGeneratorConfiguration javaClient = super.getJavaClientGeneratorConfiguration();
+        SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = super.getSqlMapGeneratorConfiguration();
         List<IntrospectedTable> introspectedTables = super.getIntrospectedTable();
         if (!introspectedTables.isEmpty()) {
             for (IntrospectedTable introspectedTable : introspectedTables) {
@@ -48,6 +53,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
                 mapper.setRemark(introspectedTable.getTable().getRemark());
                 mapper.addElement(createBaseResultMap(introspectedTable));
                 mapper.addElement(createSqlList(introspectedTable));
+                mapper.addElement(createWhereClause(introspectedTable));
                 if (introspectedTable.getConfiguration().isInsertEnabled()) {
                     mapper.addElement(createInsert(introspectedTable));
                 }
@@ -67,7 +73,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
 
                 String source = mapperTOString(mapper);
                 File directory = getDirectory(sqlMap.getTargetProject(), sqlMap.getTargetPackage());
-                writeFile(directory, source, getMapperName(introspectedTable, javaClient.getDomainObjectRenamingRule()));
+                writeFile(directory, source, getMapperName(introspectedTable, sqlMapGeneratorConfiguration.getDomainObjectRenamingRule()));
             }
         }
 
@@ -136,7 +142,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
         List<Column> columns = it.getTable().getColumns();
 
         StringBuilder sb = new StringBuilder();
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new LinkedHashMap<>();
         boolean isFirst = true;
         for (Column col : columns) {
             if (isFirst) {
@@ -149,6 +155,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
             sb.append("<").append(childName);
             map.put("column", col.getColumnName());
             map.put("property", getColumnName(col.getColumnName()));
+            map.put("jdbcType", JavaTypeResolver.getSqlJdbcTypeName(col.getJdbcType()));
             sb.append(mapTOParameterStr(map));
 
             sb.append("/>");
@@ -179,9 +186,80 @@ public class SqlMapperGenerator extends AbstractGenerator {
                 isFirst = false;
             } else {
                 sb.append(",").append(SPACE);
+                newLineAndTab(sb);
             }
             sb.append(col.getColumnName());
         }
+        element.setBody(sb.toString());
+        return element;
+    }
+
+    /**
+     * 创建sql_column_list
+     *
+     * @param it
+     * @return
+     */
+    private MapperElement createWhereClause(IntrospectedTable it) {
+
+        MapperElement element = new MapperElement();
+        element.setElementName("sql");
+        element.setRemark("the Where_Clause");
+        element.addParameter("id", "Where_Clause");
+        StringBuilder sb = new StringBuilder();
+        newTab(sb, LevelConstants.LEVEL_XML_BODY);
+        List<Column> columns = it.getTable().getColumns();
+        sb.append("<where>");
+
+        for (int i = 0; i < columns.size(); i++) {
+            Column col = columns.get(i);
+            newLine(sb);
+            newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
+            String columnName = getColumnName(col.getColumnName());
+            if ("delFlag".equals(columnName)) {
+                sb.append("<choose>");
+                newLine(sb);
+                newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
+                sb.append("<when test=\"data.delFlag != null\" >");
+                newLine(sb);
+                newTab(sb, LevelConstants.LEVEL_XML_BODY + 3);
+                sb.append("AND ").append(col.getColumnName())
+                        .append(" = #{data.").append(columnName)
+                        .append(",jdbcType=").append(JavaTypeResolver.getSqlJdbcTypeName(col.getJdbcType()))
+                        .append("}");
+                newLine(sb);
+                newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
+                sb.append("</when>");
+                newLine(sb);
+                newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
+                sb.append("<otherwise>");
+                newLine(sb);
+                newTab(sb, LevelConstants.LEVEL_XML_BODY + 3);
+                sb.append("AND del_flag = 0");
+                newLine(sb);
+                newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
+                sb.append("</otherwise>");
+                newLine(sb);
+                newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
+                sb.append("</choose>");
+
+            } else {
+                sb.append("<if test=\"data.").append(columnName).append(" != null\">");
+                newLine(sb);
+                newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
+                sb.append("AND ").append(col.getColumnName())
+                        .append(" = #{data.").append(columnName)
+                        .append(",jdbcType=").append(JavaTypeResolver.getSqlJdbcTypeName(col.getJdbcType()))
+                        .append("}");
+                newLine(sb);
+                newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
+                sb.append("</if>");
+            }
+
+
+        }
+        newLineAndTab(sb);
+        sb.append("</where>");
         element.setBody(sb.toString());
         return element;
     }
@@ -262,7 +340,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
     private MapperElement createDelById(IntrospectedTable it) {
 
         MapperElement element = new MapperElement();
-        element.setElementName("delete");
+        element.setElementName("update");
         element.setRemark(MethodEnums.DELBYID.getRemark());
         element.addParameter("id", MethodEnums.DELBYID.getMethodName());
         element.setBody(delById(it));
@@ -282,44 +360,36 @@ public class SqlMapperGenerator extends AbstractGenerator {
         Table model = it.getTable();
         newTab(sb, LevelConstants.LEVEL_XML_BODY);
         sb.append("INSERT INTO ").append(it.getTable().getTableName()).append(" (");
+        //插入字段
         for (int i = 0; i < model.getColumns().size(); i++) {
-            newLine(sb);
-            newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
             Column col = model.getColumns().get(i);
-            sb.append("<if test=").append("\"").append(getColumnName(col.getColumnName())).append(" != null").append("\"").append(">");
-            newLine(sb);
-            newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
-            sb.append(col.getColumnName());
-            if (i != model.getColumns().size() - 1) {
-                sb.append(", ");
+            //忽略的字段
+            if (IgnoreColumn.globalIgnore.contains(col.getColumnName())) {
+                continue;
             }
             newLine(sb);
             newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
-            sb.append("</if>");
+            sb.append(col.getColumnName()).append(",");
         }
-        newLine(sb);
-        newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
+
+        sb.deleteCharAt(sb.length() - 1);
+        newLineAndTab(sb);
         sb.append(")");
-        newLine(sb);
-        newTab(sb, LevelConstants.LEVEL_XML_BODY);
+        newLineAndTab(sb);
+
         sb.append("VALUES (");
         for (int i = 0; i < model.getColumns().size(); i++) {
-            newLine(sb);
-            newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
             Column col = model.getColumns().get(i);
-            sb.append("<if test=").append("\"").append(getColumnName(col.getColumnName())).append(" != null").append("\"").append(">");
-            newLine(sb);
-            newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
-            sb.append("#{").append(getColumnName(col.getColumnName())).append("}");
-            if (i != model.getColumns().size() - 1) {
-                sb.append(", ");
+            //忽略的字段
+            if (IgnoreColumn.globalIgnore.contains(col.getColumnName())) {
+                continue;
             }
             newLine(sb);
             newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
-            sb.append("</if>");
+            sb.append(ColumnUtil.getSpliceString(col)).append(",");
         }
-        newLine(sb);
-        newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
+        sb.deleteCharAt(sb.length() - 1);
+        newLineAndTab(sb);
         sb.append(")");
         return sb.toString();
     }
@@ -363,13 +433,17 @@ public class SqlMapperGenerator extends AbstractGenerator {
         Table model = it.getTable();
         newTab(sb, LevelConstants.LEVEL_XML_BODY);
         sb.append("SELECT ");
-        newLine(sb);
-        newTab(sb, LevelConstants.LEVEL_XML_BODY);
+        newLineAndTab(sb);
         sb.append("<include refid=\"Base_Column_List\"/>");
-        newLine(sb);
-        newTab(sb, LevelConstants.LEVEL_XML_BODY);
+        newLineAndTab(sb);
         sb.append("FROM ").append(model.getTableName());
-
+        newLineAndTab(sb);
+        sb.append("<if test=\"data != null\">");
+        newLine(sb);
+        newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
+        sb.append("<include refid=\"Where_Clause\" />");
+        newLineAndTab(sb);
+        sb.append("</if>");
         return sb.toString();
     }
 
@@ -389,12 +463,15 @@ public class SqlMapperGenerator extends AbstractGenerator {
         newTab(sb, LevelConstants.LEVEL_XML_BODY);
         sb.append("<set>");
         for (Column col : model.getColumns()) {
+            if (IgnoreColumn.updateIgnore.contains(col.getColumnName())) {
+                continue;
+            }
             newLine(sb);
             newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
             sb.append("<if test=").append("\"").append(getColumnName(col.getColumnName())).append(" != null").append("\"").append(">");
             newLine(sb);
             newTab(sb, LevelConstants.LEVEL_XML_BODY + 2);
-            sb.append(col.getColumnName()).append(" = #{").append(getColumnName(col.getColumnName())).append("}").append(",");
+            sb.append(col.getColumnName()).append(" = ").append(ColumnUtil.getSpliceString(col)).append(",");
             newLine(sb);
             newTab(sb, LevelConstants.LEVEL_XML_BODY + 1);
             sb.append("</if>");
@@ -420,9 +497,10 @@ public class SqlMapperGenerator extends AbstractGenerator {
         StringBuilder sb = new StringBuilder();
         Table model = it.getTable();
         newTab(sb, LevelConstants.LEVEL_XML_BODY);
-        sb.append("DELETE FROM ").append(model.getTableName());
-        newLine(sb);
-        newTab(sb, LevelConstants.LEVEL_XML_BODY);
+        sb.append("UPDATE").append(model.getTableName());
+        newLineAndTab(sb);
+        sb.append("SET del_flag = 1");
+        newLineAndTab(sb);
         sb.append("WHERE ").append(ksyString(model.getKeys()));
 
         return sb.toString();
@@ -462,7 +540,7 @@ public class SqlMapperGenerator extends AbstractGenerator {
                 newTab(sb, LevelConstants.LEVEL_XML_BODY);
                 sb.append("AND ");
             }
-            sb.append(col.getColumnName()).append(" = #{").append(getColumnName(col.getColumnName())).append("}");
+            sb.append(col.getColumnName()).append(" = ").append(ColumnUtil.getSpliceString(col));
         }
 
         return sb.toString();

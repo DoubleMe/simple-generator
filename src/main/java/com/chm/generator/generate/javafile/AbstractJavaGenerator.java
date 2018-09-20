@@ -42,7 +42,7 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
         Map<String, Object> importMap = classModel.getImportMap();
         if (!importMap.isEmpty()) {
             for (String key : importMap.keySet()) {
-                if (key.indexOf("java.lang") == -1 && key.indexOf(classModel.getPackageName()) == -1) {
+                if (key.indexOf("java.lang") == -1 && !key.equals(classModel.getPackageName())) {
                     sb.append(IMPORT).append(key).append(";");
                     newLine(sb);
                 }

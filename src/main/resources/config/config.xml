@@ -6,7 +6,7 @@
     <context id="mybatis">
         <!-- 数据库链接信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/carfree_park?characterEncoding=utf8"
+                        connectionURL="jdbc:mysql://localhost:3306/go?characterEncoding=utf8"
                         userId="root" password="root">
         </jdbcConnection>
         <!-- model 数据模型 -->
@@ -15,14 +15,14 @@
         </javaModelGenerator>
         <!-- sqlMapper -->
         <sqlMapGenerator targetPackage="com.carfree.parking.dao.sqlMapper" targetProject="E:\generate\parking">
-            <domainObjectRenamingRule suffix="Mapper"/>
+            <domainObjectRenamingRule prefix="sqlmap-go-" suffix="Mapper"/>
         </sqlMapGenerator>
         <!-- javaMapper-->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.carfree.parking.dao" targetProject="E:\generate\parking">
             <domainObjectRenamingRule suffix="DAO"/>
         </javaClientGenerator>
         <!-- 表名,tableName 支持模糊查询 允许配置多个table -->
-        <table tableName="parking%">
+        <table tableName="cnt_material">
         </table>
     </context>
 </generatorConfiguration>

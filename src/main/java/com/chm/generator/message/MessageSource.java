@@ -20,24 +20,24 @@ public class MessageSource {
 
     }
 
-    /**
-     * 从source 获取message
-     * @param key msg key
-     * @return message if not exist return key
-     */
-    public static String getMessage(String key) {
-
-        try {
-            String message = new String(RESOURCE_BUNDLE.getString(key).getBytes("ISO-8859-1"), "UTF-8");
-            return message;
-        } catch (MissingResourceException e) {
-            e.printStackTrace();
-            return key;
-        }catch (UnsupportedEncodingException e){
-            e.printStackTrace();
-            return key;
-        }
-    }
+//    /**
+//     * 从source 获取message
+//     * @param key msg key
+//     * @return message if not exist return key
+//     */
+//    public static String getMessage(String key) {
+//
+//        try {
+//            String message = new String(RESOURCE_BUNDLE.getString(key).getBytes("ISO-8859-1"), "UTF-8");
+//            return message;
+//        } catch (MissingResourceException e) {
+//            e.printStackTrace();
+//            return key;
+//        }catch (UnsupportedEncodingException e){
+//            e.printStackTrace();
+//            return key;
+//        }
+//    }
 
     /**
      *  从source 获取message
