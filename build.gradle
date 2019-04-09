@@ -1,5 +1,6 @@
 apply plugin: 'war'
 
+
 allprojects {
     apply plugin: 'idea'
     configurations {
@@ -9,8 +10,10 @@ allprojects {
         all { resolutionStrategy.cacheChangingModulesFor 1, 'minutes' }
     }
     repositories {
-        mavenCentral()
-        maven { url "http://repo1.maven.org/maven2/" }
+//        mavenCentral()
+        maven { 
+            url uri("../repo")
+        }
     }
     idea {
         module {
@@ -35,31 +38,31 @@ allprojects {
 
     dependencies {
 
-        compile("org.slf4j:jcl-over-slf4j:1.7.12")
-        compile("org.slf4j:log4j-over-slf4j:1.7.12")
-        compile("ch.qos.logback:logback-classic:1.1.3")
-
-        compile("com.fasterxml.jackson.core:jackson-databind:2.6.1")
-        compile("dom4j:dom4j:1.6.1")
-        compile("javax.servlet:javax.servlet-api:3.1.0") { transitive = false }
-        compile("org.jboss.logging:jboss-logging:3.2.1.Final")
-
-        compile("org.mybatis:mybatis:3.3.0")
-        compile("org.mybatis:mybatis-spring:1.2.3")
-
-        compile("com.alibaba:druid:1.0.15")
-        compile("org.aspectj:aspectjrt:1.8.6")
-        compile("org.aspectj:aspectjweaver:1.8.6")
-        compile("mysql:mysql-connector-java:5.1.33")
-        compile("com.alibaba:fastjson:1.2.8")
+//        compile("org.slf4j:jcl-over-slf4j:1.7.12")
+//        compile("org.slf4j:log4j-over-slf4j:1.7.12")
+//        compile("ch.qos.logback:logback-classic:1.1.3")
+//
+//        compile("com.fasterxml.jackson.core:jackson-databind:2.6.1")
+//        compile("dom4j:dom4j:1.6.1")
+//        compile("javax.servlet:javax.servlet-api:3.1.0") { transitive = false }
+//        compile("org.jboss.logging:jboss-logging:3.2.1.Final")
+//
+//        compile("org.mybatis:mybatis:3.3.0")
+//        compile("org.mybatis:mybatis-spring:1.2.3")
+//
+//        compile("com.alibaba:druid:1.0.15")
+//        compile("org.aspectj:aspectjrt:1.8.6")
+//        compile("org.aspectj:aspectjweaver:1.8.6")
+//        compile("mysql:mysql-connector-java:5.1.33")
+//        compile("com.alibaba:fastjson:1.2.8")
     }
 
 }
 
-sourceSets.main.output.resourcesDir = sourceSets.main.output.classesDir
-sourceSets.test.output.resourcesDir = sourceSets.test.output.classesDir
+sourceSets.main.output.resourcesDir = sourceSets.main.output.classesDirs
+sourceSets.test.output.resourcesDir = sourceSets.test.output.classesDirs
 
-task cleanAll << {
+task cleanAll  {
     println "Clean project.."
     delete buildDir
 }
@@ -69,7 +72,7 @@ task initSourceFolders {
     sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 }
 
-task init << {
+task initProject {
     println '+---------------------------------------------------+'
     println '|                                                   |'
     println "| B U I L D I N G $project.name $version .....      "
@@ -77,7 +80,7 @@ task init << {
     println '+---------------------------------------------------+'
 }
 
-compileJava.dependsOn([init])
+compileJava.dependsOn([initProject])
 
 /**
  * 拷贝jar
@@ -95,39 +98,14 @@ task buildShareJar(dependsOn: [cleanAll,copyJar,jar],type: Jar){
     manifest {
         attributes 'Implementation-Title': 'Gradle'
         attributes 'Implementation-Version': version
-        attributes 'Created-By': author
+        attributes 'Created-By': 'chen-hongmin'
         attributes 'Main-Class': 'com.chm.generator.ShellRunner'
 //        attributes 'Class-Path': configurations.compile.collect {'lib/' + it.getName()}.join(' ')
     }
     from({
         sourceSets.main.output.classesDir
     })
-    destinationDir  = file( 'E:\\generate')
+    destinationDir  = file( '/Users/yuwen/tools/generate')
     archiveName = "$shareModuleName-${shareVersion}.jar"
 }
-
-/**
- * 生成接口文档
- */
-task javaDoc(type:org.gradle.api.tasks.javadoc.Javadoc){
-    title = "$project.name-$version API"
-    source = sourceSets.main.allJava
-    destinationDir  = file("D:\\doc\\$project.name-$version")
-    include 'com/chm/generator/doc/**'
-    exclude '**/impl'
-}
-
-task mybatisGenerator(){
-    def jarFile = "E:\\generate\\simple-generator-1.0.jar"
-    def configFile = "E:\\generate\\generator.xml"
-    def projectPath = rootDir.getAbsolutePath()
-    def cmd = "java -jar " + jarFile + " -configfile " + configFile + " -project " + projectPath
-    println "**********************************************************************"
-    println "shell: " + cmd
-    println " "
-    Process p = cmd.execute()
-    println "${p.text}"
-}
-
-
 

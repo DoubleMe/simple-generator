@@ -1,41 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-       Copyright 2006-2017 the original author or authors.
-
-       Licensed under the Apache License, Version 2.0 (the "License");
-       you may not use this file except in compliance with the License.
-       You may obtain a copy of the License at
-
-          http://www.apache.org/licenses/LICENSE-2.0
-
-       Unless required by applicable law or agreed to in writing, software
-       distributed under the License is distributed on an "AS IS" BASIS,
-       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-       See the License for the specific language governing permissions and
-       limitations under the License.
-
--->
-<!--
-  This DTD defines the structure of the MyBatis generator configuration file.
-  Configuration files should declare the DOCTYPE as follows:
-  
-  <!DOCTYPE generatorConfiguration PUBLIC
-    "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
-    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
-  
-  Please see the documentation included with MyBatis generator for details on each option
-  in the DTD.  You may also view documentation on-line here:
-  
-  http://www.mybatis.org/generator/
-  
--->
-
-<!--
-  The generatorConfiguration element is the root element for configurations.
--->
 <!ELEMENT generatorConfiguration (properties?, classPathEntry*, context+)>
-                        
 <!--
   The properties element is used to define a standard Java properties file
   that contains placeholders for use in the remainder of the configuration
