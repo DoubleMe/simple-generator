@@ -7,6 +7,7 @@ import com.chm.generator.connection.executor.DBConfigAdapter;
 import com.chm.generator.generate.GeneratorConfigHolder;
 import com.chm.generator.generate.GeneratorExecutor;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Map;
  * @version V1.0
  * @since 2017/9/10 15:30.
  */
-public class ShellRunnerCopy {
+public class Main {
 
 
 
@@ -25,10 +26,9 @@ public class ShellRunnerCopy {
 
 
 
-        String configFile = "/config/config.xml";
-
+        String configFile = "/Users/yuwen/tools/generate/config.xml";
+        InputStream inputStream = new FileInputStream(configFile);
         ConfigurationParser parser = new ConfigurationParser();
-        InputStream inputStream = parser.getClass().getResourceAsStream(configFile);
 
         Configuration configuration = parser.parseConfiguration(inputStream);
 

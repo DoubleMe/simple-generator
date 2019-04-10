@@ -83,12 +83,11 @@ public class ConfigurationParser {
             } catch (SAXParseException e) {
                 throw new XMLParserException(new ArrayList<>());
             } catch (SAXException e) {
-
+                e.printStackTrace();
             }
             Element rootNode = document.getDocumentElement();
             return parseMyBatisGeneratorConfiguration(rootNode);
         } catch (ParserConfigurationException e) {
-
             throw new XMLParserException(new ArrayList<>());
         }
 
